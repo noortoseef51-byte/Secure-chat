@@ -3,94 +3,96 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BOSS HQ | ENCRYPTED NODE</title>
+  <title>BOSS CONTROL | FINAL HQ</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root { --bg: #050507; --glow: #00f2ff; --gold: #d4af37; --danger: #ff2e63; --border: rgba(0, 242, 255, 0.2); }
     body { background: var(--bg); color: #e0e0e0; font-family: 'Inter', sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
     
-    .scanline { position: fixed; inset: 0; background: linear-gradient(to bottom, transparent 50%, rgba(0, 242, 255, 0.05) 50%); background-size: 100% 4px; pointer-events: none; z-index: 9999; animation: scan 10s linear infinite; }
-    @keyframes scan { 0% { background-position: 0% 0%; } 100% { background-position: 0% 100%; } }
+    #bossAlert { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 5000; display: none; justify-content: center; align-items: center; flex-direction: column; border: 25px solid var(--glow); }
+    .boss-text { font-family: 'Orbitron'; font-size: 70px; color: var(--glow); text-shadow: 0 0 40px var(--glow); animation: pulse 0.3s infinite alternate; text-align: center; }
+    @keyframes pulse { from { transform: scale(0.9); } to { transform: scale(1.1); } }
 
-    .overlay { position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: flex; justify-content: center; align-items: center; }
-    .login-card { background: rgba(10, 10, 15, 0.95); padding: 50px; border: 1px solid var(--glow); border-radius: 20px; text-align: center; }
-    input { display: block; width: 300px; padding: 12px; margin-bottom: 15px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: white; border-radius: 8px; outline: none; }
+    .top-header { width: 100%; height: 60px; background: rgba(20, 20, 25, 0.9); border-bottom: 2px solid var(--glow); display: flex; justify-content: space-between; align-items: center; z-index: 10; padding: 0 15px; box-sizing: border-box; }
+    .header-left, .header-right { display: flex; align-items: center; gap: 8px; }
+    .top-header h2 { font-family: 'Orbitron'; color: var(--glow); letter-spacing: 5px; margin: 0; font-size: 14px; }
 
-    .top-header { width: 100%; height: 65px; background: rgba(20, 20, 25, 0.95); border-bottom: 2px solid var(--glow); display: flex; justify-content: space-between; align-items: center; padding: 0 20px; box-sizing: border-box; z-index: 100; }
-    .btn { padding: 8px 15px; background: transparent; color: var(--glow); border: 1px solid var(--glow); cursor: pointer; font-weight: 600; text-transform: uppercase; font-size: 10px; border-radius: 5px; transition: 0.3s; }
-    .btn:hover { background: var(--glow); color: black; box-shadow: 0 0 15px var(--glow); }
+    .main-container { flex: 1; display: flex; overflow: hidden; }
+    .video-grid { flex: 1; padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; background: rgba(0,0,0,0.4); overflow-y: auto; }
+    .video-container { position: relative; width: 100%; border-radius: 12px; border: 2px solid var(--border); background: #000; aspect-ratio: 16/9; }
+    video { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
+    
+    /* YouTube Section */
+    #yt-section { width: 100%; aspect-ratio: 16/9; background: #000; border-bottom: 1px solid var(--gold); display: none; }
 
-    .main-container { flex: 1; display: flex; }
-    .video-grid { flex: 1; padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; background: rgba(0,0,0,0.4); overflow-y: auto; }
-    .video-wrap { position: relative; border: 2px solid var(--border); border-radius: 15px; overflow: hidden; background: #000; aspect-ratio: 16/9; }
-    video { width: 100%; height: 100%; object-fit: cover; }
-    .video-label { position: absolute; bottom: 10px; left: 10px; font-size: 10px; background: rgba(0,0,0,0.7); padding: 4px 8px; border-radius: 4px; color: var(--glow); }
-
-    /* YT Player Section */
-    #yt-container { width: 100%; aspect-ratio: 16/9; background: #000; border-bottom: 1px solid var(--border); display: none; }
-
-    .sidebar { width: 380px; background: #08080a; border-left: 1px solid var(--border); display: flex; flex-direction: column; }
+    .sidebar { width: 380px; border-left: 1px solid var(--border); display: flex; flex-direction: column; background: #08080a; }
     #chat-msgs { flex: 1; overflow-y: auto; padding: 20px; }
-    .msg-bubble { margin-bottom: 15px; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 10px; border-left: 3px solid var(--glow); cursor: pointer; }
-    .reply-preview { font-size: 9px; color: #888; border-left: 2px solid #555; padding-left: 5px; margin-bottom: 5px; }
+    .msg-bubble { margin-bottom: 15px; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 8px; border-left: 3px solid var(--glow); position: relative; cursor: pointer; }
+    .reply-box-in-msg { font-size: 10px; background: rgba(0, 242, 255, 0.1); padding: 5px; border-radius: 4px; margin-bottom: 5px; border-left: 2px solid var(--glow); color: #aaa; }
 
-    .admin-only { display: none; }
-    .admin-mode .admin-only { display: inline-block; }
+    #replyPreview { display: none; background: rgba(0, 242, 255, 0.1); padding: 8px 15px; border-top: 1px solid var(--glow); font-size: 11px; color: var(--glow); justify-content: space-between; align-items: center; }
+    
+    .btn { padding: 6px 10px; background: transparent; color: var(--glow); border: 1px solid var(--glow); cursor: pointer; font-weight: 600; text-transform: uppercase; font-size: 9px; border-radius: 4px; transition: 0.3s; }
+    .btn:hover { background: var(--glow); color: black; }
+    .btn-danger { border-color: var(--danger); color: var(--danger); }
+    .btn-danger:hover { background: var(--danger); color: white; }
+
+    .admin-only-btn { display: none; }
+    .admin-mode .admin-only-btn { display: inline-block; }
     .hidden { display: none !important; }
-
-    #reply-bar { display: none; padding: 8px; background: rgba(0, 242, 255, 0.1); font-size: 11px; border-top: 1px solid var(--glow); }
+    #flashBox { position:fixed; top:20%; left:50%; transform:translateX(-50%); background:rgba(0, 242, 255, 0.9); padding:20px; border-radius:10px; z-index:6000; display:none; color:black; font-weight:bold; border:2px solid white; text-align:center; }
   </style>
 </head>
 <body>
 
-  <div class="scanline"></div>
-  <div id="bossAlert" style="position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:9000; display:none; justify-content:center; align-items:center; border:20px solid var(--glow);"><h1 style="font-family:'Orbitron'; color:var(--glow);">BOSS ENTERED</h1></div>
+  <div id="bossAlert"><div class="boss-text">BOSS ENTERED</div></div>
+  <div id="flashBox"><div id="flashTxt"></div></div>
+  <audio id="sirenSound" src="https://www.soundjay.com/buttons/beep-01a.mp3"></audio> 
 
-  <div id="loginBox" class="overlay">
+  <div id="loginBox" class="overlay" style="position:fixed; inset:0; background:var(--bg); z-index:10000; display:flex; justify-content:center; align-items:center;">
     <div class="login-card">
-      <h2 style="font-family:'Orbitron'; color:var(--glow);">NODE ACCESS</h2>
-      <input type="text" id="uName" placeholder="IDENTITY NAME">
-      <input type="password" id="uCode" placeholder="PASSKEY (FOR ADMIN)">
-      <button class="btn" onclick="enterSuite()" style="width:100%; padding:15px;">AUTHORIZE ACCESS</button>
-      <p id="errLog" style="color:var(--danger); font-size:10px; margin-top:10px;"></p>
+      <h1 style="font-family: 'Orbitron'; color:var(--glow);">SECURE ACCESS</h1>
+      <input type="text" id="uName" placeholder="ENTER NAME">
+      <input type="password" id="uCode" placeholder="PASSKEY">
+      <button class="btn" onclick="enterSuite()" style="width:100%; padding: 15px; font-size:12px;">LOGIN</button>
+      <p id="errorTxt" style="color:var(--danger); font-size:10px; margin-top:10px;"></p>
     </div>
   </div>
 
   <header class="top-header hidden" id="headerUI">
-    <div style="display:flex; gap:10px;">
-      <span style="color:var(--glow); font-family:'Orbitron';">HQ-NODE</span>
-      <button class="btn admin-only" onclick="setYTLink()" style="border-color:var(--gold); color:var(--gold);">🎵 GLOBAL YOUTUBE</button>
+    <div class="header-left">
+      <h2>HQ-NODE</h2>
+      <button class="btn admin-only-btn" onclick="shareSpecificName()" style="border-color:#25D366; color:#25D366;">📲 INVITE</button>
+      <button class="btn admin-only-btn" style="border-color:var(--gold); color:var(--gold);" onclick="setYTLink()">🎵 YT VIDEO</button>
+      <button class="btn admin-only-btn btn-danger" onclick="purgeChat()">🗑️ PURGE CHAT</button>
     </div>
-    <div style="display:flex; gap:8px;">
-      <button class="btn admin-only" id="lockBtn" onclick="toggleLock()">🔓 UNLOCKED</button>
-      <button class="btn" onclick="toggleMedia()">📹 CAM</button>
+    <div class="header-right">
+      <button class="btn admin-only-btn" onclick="sendFlash()">⚡ FLASH</button>
+      <button class="btn" style="border-color:#a200ff;" onclick="toggleMedia()">📹 CAM</button>
       <button class="btn" style="border-color:var(--danger);" onclick="location.reload()">🚪 EXIT</button>
     </div>
   </header>
 
-  <div class="main-container hidden" id="suiteUI">
-    <div class="video-grid">
-      <div class="video-wrap">
-        <video id="localVid" autoplay muted playsinline></video>
-        <div class="video-label" id="myLabel">CONNECTING...</div>
-      </div>
+  <div class="main-container hidden" id="suiteInterface">
+    <div class="video-grid" id="videoArea">
+      <div class="video-container"><video id="localVid" autoplay muted playsinline></video></div>
     </div>
-
+    
     <div class="sidebar">
-      <div id="yt-container">
+      <div id="yt-section">
         <iframe id="yt-player" width="100%" height="100%" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
       </div>
 
       <div id="chat-msgs"></div>
-
-      <div id="reply-bar">
-        Replying to: <span id="reply-to-user" style="color:var(--glow);"></span> 
-        <button onclick="cancelReply()" style="float:right; background:none; border:none; color:var(--danger); cursor:pointer;">X</button>
+      
+      <div id="replyPreview">
+          <span id="replyTxt">Replying...</span>
+          <span style="cursor:pointer" onclick="cancelReply()">✖</span>
       </div>
-
-      <div style="padding:15px; border-top:1px solid var(--border); display:flex; gap:8px;">
-        <input type="text" id="mInp" placeholder="Secure signal..." style="flex:1; margin:0; background:transparent; border:none; color:white;">
-        <button class="btn" onclick="sendChat()">></button>
+      
+      <div style="padding:15px; display:flex; gap:8px; border-top:1px solid var(--border);">
+        <input type="text" id="mInput" placeholder="Write signal..." style="flex:1; background:transparent; border:none; color:white; outline:none;">
+        <button class="btn" onclick="sendChat()">SEND</button>
       </div>
     </div>
   </div>
@@ -107,71 +109,86 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-    let myName = "", rid = "supreme_base_pro", isAdmin = false, replyData = null;
+    let myName = "", rid = "supreme_base_pro", isAdmin = false, localStream = null, replyData = null;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const lockedName = urlParams.get('join');
 
     async function enterSuite() {
       const name = document.getElementById("uName").value.trim();
       const code = document.getElementById("uCode").value.trim();
+      const err = document.getElementById("errorTxt");
+
       if(!name) return;
 
       if (code === "1661@786") {
-        isAdmin = true;
-        document.body.classList.add("admin-mode");
-        db.collection('rooms').doc(rid).set({ bossT: Date.now() }, {merge:true});
+          isAdmin = true;
+          document.body.classList.add("admin-mode");
+          db.collection('rooms').doc(rid).set({ bossSignal: Date.now() }, {merge: true});
+      } 
+      else if(lockedName) {
+          if(name.toLowerCase() !== lockedName.toLowerCase()) {
+              err.innerText = "❌ Only for: " + lockedName; return;
+          }
+      } else {
+          err.innerText = "❌ Private link required."; return;
       }
 
       myName = name;
       document.getElementById("loginBox").classList.add("hidden");
+      document.getElementById("suiteInterface").classList.remove("hidden");
       document.getElementById("headerUI").classList.remove("hidden");
-      document.getElementById("suiteUI").classList.remove("hidden");
-      document.getElementById("myLabel").innerText = "USER: " + myName.toUpperCase();
-      
-      initChat(); listenLock(); listenYT();
+      initChat(); listenBoss(); listenYT(); listenFlash();
     }
 
-    // --- YOUTUBE SYSTEM ---
-    function setYTLink() {
-        const url = prompt("Paste YouTube Link (e.g., https://www.youtube.com/watch?v=XXXX):");
-        if(url) {
-            let videoId = "";
-            if(url.includes("v=")) videoId = url.split("v=")[1].split("&")[0];
-            else if(url.includes("be/")) videoId = url.split("be/")[1];
+    // --- ADMIN: PURGE CHAT ---
+    async function purgeChat() {
+      if(!confirm("DELETE ALL MESSAGES?")) return;
+      const snap = await db.collection('rooms').doc(rid).collection('messages').get();
+      const batch = db.batch();
+      snap.forEach(doc => batch.delete(doc.ref));
+      await batch.commit();
+    }
 
-            if(videoId) {
-                db.collection('rooms').doc(rid).update({ ytId: videoId, ytTime: Date.now() });
-            }
-        }
+    // --- ADMIN: YOUTUBE ---
+    function setYTLink() {
+      const url = prompt("Paste YouTube Link:");
+      if(url) {
+        let id = url.includes("v=") ? url.split("v=")[1].split("&")[0] : url.split("be/")[1];
+        db.collection('rooms').doc(rid).update({ ytId: id });
+      } else {
+        db.collection('rooms').doc(rid).update({ ytId: null });
+      }
     }
 
     function listenYT() {
-        db.collection('rooms').doc(rid).onSnapshot(doc => {
-            if(doc.exists && doc.data().ytId) {
-                const container = document.getElementById("yt-container");
-                const player = document.getElementById("yt-player");
-                container.style.display = "block";
-                player.src = `https://www.youtube.com/embed/${doc.data().ytId}?autoplay=1`;
-            }
-        });
+      db.collection('rooms').doc(rid).onSnapshot(doc => {
+        const sec = document.getElementById("yt-section");
+        const player = document.getElementById("yt-player");
+        if(doc.exists && doc.data().ytId) {
+          sec.style.display = "block";
+          player.src = `https://www.youtube.com/embed/${doc.data().ytId}?autoplay=1`;
+        } else {
+          sec.style.display = "none";
+          player.src = "";
+        }
+      });
     }
 
-    // --- CHAT & REPLY SYSTEM ---
-    function setReply(u, t) {
-        replyData = { user: u, text: t };
-        document.getElementById("reply-bar").style.display = "block";
-        document.getElementById("reply-to-user").innerText = u;
+    // --- REPLIES & CHAT ---
+    function setReply(n, t) {
+        replyData = { n, t };
+        document.getElementById("replyPreview").style.display = "flex";
+        document.getElementById("replyTxt").innerText = "Replying to " + n;
     }
-
-    function cancelReply() {
-        replyData = null;
-        document.getElementById("reply-bar").style.display = "none";
-    }
+    function cancelReply() { replyData = null; document.getElementById("replyPreview").style.display = "none"; }
 
     function sendChat() {
-      const i = document.getElementById("mInp");
+      const i = document.getElementById("mInput");
       if(!i.value) return;
-      const payload = { name: myName, text: i.value, time: Date.now() };
-      if(replyData) { payload.replyTo = replyData.user; payload.replyMsg = replyData.text; }
-      db.collection('rooms').doc(rid).collection('messages').add(payload);
+      db.collection('rooms').doc(rid).collection('messages').add({
+          name: myName, text: i.value, time: Date.now(), reply: replyData
+      });
       i.value = ""; cancelReply();
     }
 
@@ -180,26 +197,51 @@
         const box = document.getElementById("chat-msgs"); box.innerHTML = "";
         snap.forEach(doc => {
           const d = doc.data();
-          const replyHtml = d.replyTo ? `<div class="reply-preview">⬑ ${d.replyTo}: ${d.replyMsg}</div>` : "";
-          box.innerHTML += `<div class="msg-bubble" onclick="setReply('${d.name}', '${d.text}')">${replyHtml}<b style="color:var(--glow); font-size:10px;">${d.name}</b><br>${d.text}</div>`;
+          let rH = d.reply ? `<div class="reply-box-in-msg"><b>${d.reply.n}:</b> ${d.reply.t}</div>` : "";
+          box.innerHTML += `<div class="msg-bubble" onclick="setReply('${d.name}', '${d.text}')">${rH}<b style="color:var(--glow); font-size:10px;">${d.name}</b><br>${d.text}</div>`;
         });
         box.scrollTop = box.scrollHeight;
       });
     }
 
-    function listenLock() {
+    // --- OTHERS ---
+    function shareSpecificName() {
+      const t = prompt("Invite Name:");
+      if(t) {
+        const link = `${window.location.origin}${window.location.pathname}?join=${encodeURIComponent(t)}`;
+        window.open(`https://wa.me/?text=${encodeURIComponent('JOIN AS ' + t + ': ' + link)}`);
+      }
+    }
+    function listenBoss() {
       db.collection('rooms').doc(rid).onSnapshot(doc => {
-        if(doc.exists) {
-          const l = doc.data().isLocked;
-          const b = document.getElementById("lockBtn");
-          if(b) b.innerText = l ? "🔒 LOCKED" : "🔓 UNLOCKED";
+        if(doc.exists && doc.data().bossSignal) {
+          document.getElementById("bossAlert").style.display = "flex";
+          document.getElementById("sirenSound").play();
+          setTimeout(() => document.getElementById("bossAlert").style.display = "none", 4000);
         }
       });
     }
-
+    async function sendFlash() {
+      const m = prompt("Flash Order:");
+      if(m) await db.collection('rooms').doc(rid).update({ flash: m, flashT: Date.now() });
+    }
+    function listenFlash() {
+      db.collection('rooms').doc(rid).onSnapshot(doc => {
+        if(doc.exists && doc.data().flash) {
+          const f = document.getElementById("flashBox");
+          document.getElementById("flashTxt").innerText = "BOSS: " + doc.data().flash;
+          f.style.display = "block";
+          setTimeout(() => f.style.display = "none", 6000);
+        }
+      });
+    }
     async function toggleMedia() {
-        const stream = await navigator.mediaDevices.getUserMedia({video:true, audio:true});
-        document.getElementById("localVid").srcObject = stream;
+      if(!localStream) { 
+        localStream = await navigator.mediaDevices.getUserMedia({video:true, audio:true}); 
+        document.getElementById("localVid").srcObject = localStream; 
+      } else {
+        const t = localStream.getVideoTracks()[0]; t.enabled = !t.enabled;
+      }
     }
   </script>
 </body>
