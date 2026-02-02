@@ -2,49 +2,36 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BOSS CONTROL | HQ FINAL</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>BOSS CONTROL | HQ EXCLUSIVE</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root { --bg: #050507; --glow: #00f2ff; --danger: #ff2e63; --border: rgba(0, 242, 255, 0.2); --gold: #d4af37; }
-    body { background: var(--bg); color: #e0e0e0; font-family: 'Inter', sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-    
-    /* Boss Alerts & Flash */
-    #bossAlert, #flashBox { position: fixed; inset: 0; z-index: 99999; display: none; justify-content: center; align-items: center; flex-direction: column; text-align: center; }
-    #bossAlert { background: rgba(0,0,0,0.95); border: 20px solid var(--glow); }
-    #flashBox { background: rgba(0,0,0,0.9); border: 15px solid var(--gold); }
-    
-    .boss-text { font-family: 'Orbitron'; font-size: 60px; color: var(--glow); text-shadow: 0 0 30px var(--glow); animation: pulse 0.4s infinite alternate; }
-    .flash-text { font-family: 'Orbitron'; font-size: 50px; color: var(--gold); text-shadow: 0 0 20px var(--gold); }
+    * { box-sizing: border-box; }
+    body { background: var(--bg); color: #e0e0e0; font-family: 'Inter', sans-serif; margin: 0; display: flex; flex-direction: column; height: 100dvh; overflow: hidden; }
+    #bossAlert { position: fixed; inset: 0; z-index: 99999; display: none; justify-content: center; align-items: center; flex-direction: column; text-align: center; padding: 20px; background: rgba(0,0,0,0.95); border: 15px solid var(--glow); }
+    #flashBox { position: fixed; inset: 0; z-index: 99998; display: none; justify-content: center; align-items: center; flex-direction: column; text-align: center; padding: 20px; background: rgba(0,0,0,0.9); border: 10px solid var(--gold); }
+    .boss-text { font-family: 'Orbitron'; font-size: clamp(30px, 8vw, 60px); color: var(--glow); text-shadow: 0 0 20px var(--glow); animation: pulse 0.3s infinite alternate; }
     @keyframes pulse { from { transform: scale(0.95); } to { transform: scale(1.05); } }
-
-    /* Login UI */
-    .overlay { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-    .login-header { font-family: 'Orbitron'; font-size: 35px; color: var(--glow); margin-bottom: 25px; }
-    .input-group { display: flex; gap: 5px; margin-bottom: 15px; }
-    .input-group input { width: 190px; padding: 12px; background: #e8f0fe; border: none; color: #000; font-weight: bold; }
-    .login-btn { width: 400px; padding: 15px; background: transparent; border: 1.5px solid var(--glow); color: var(--glow); font-family: 'Orbitron'; cursor: pointer; transition: 0.3s; }
+    .overlay { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
+    .login-card { width: 100%; max-width: 400px; text-align: center; }
+    .login-header { font-family: 'Orbitron'; font-size: 28px; color: var(--glow); margin-bottom: 25px; letter-spacing: 2px; }
+    .input-group { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; }
+    .input-group input { flex: 1; min-width: 140px; padding: 12px; background: #e8f0fe; border: none; color: #000; font-weight: bold; font-family: 'Inter'; }
+    .login-btn { width: 100%; padding: 15px; background: transparent; border: 1.5px solid var(--glow); color: var(--glow); font-family: 'Orbitron'; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
     .login-btn:hover { background: var(--glow); color: #000; }
-
-    /* Layout */
-    .top-header { width: 100%; height: 60px; background: rgba(20,20,25,0.95); border-bottom: 2px solid var(--glow); display: flex; justify-content: space-between; align-items: center; padding: 0 20px; box-sizing: border-box; }
-    .live-tag { font-family: 'Orbitron'; font-size: 10px; color: #25D366; border: 1px solid #25D366; padding: 3px 8px; border-radius: 15px; }
-    
-    .btn { padding: 6px 12px; background: transparent; color: var(--glow); border: 1px solid var(--glow); cursor: pointer; font-size: 9px; font-weight: bold; text-transform: uppercase; border-radius: 3px; }
-    .btn-gold { color: var(--gold); border-color: var(--gold); }
-    .btn-danger { color: var(--danger); border-color: var(--danger); }
-
+    .top-header { width: 100%; min-height: 60px; background: rgba(20,20,25,0.95); border-bottom: 2px solid var(--glow); display: flex; justify-content: space-between; align-items: center; padding: 5px 15px; z-index: 100; }
     .main-container { flex: 1; display: flex; overflow: hidden; }
-    .video-grid { flex: 1; padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; background: rgba(0,0,0,0.5); overflow-y: auto; }
+    .video-grid { flex: 1; padding: 10px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; background: rgba(0,0,0,0.5); overflow-y: auto; }
     .video-card { border: 1px solid var(--border); background: #000; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; }
     video { width: 100%; height: 100%; object-fit: cover; }
-
-    .sidebar { width: 380px; border-left: 1px solid var(--border); display: flex; flex-direction: column; background: #08080a; }
+    .sidebar { width: 350px; border-left: 1px solid var(--border); display: flex; flex-direction: column; background: #08080a; }
     #yt-area { width: 100%; aspect-ratio: 16/9; display: none; border-bottom: 2px solid var(--gold); }
-    #chat-msgs { flex: 1; overflow-y: auto; padding: 15px; }
-    .msg-bubble { margin-bottom: 10px; padding: 10px; background: rgba(255,255,255,0.03); border-left: 3px solid var(--glow); cursor: pointer; }
-
-    #reply-box { display: none; padding: 8px; background: rgba(0,242,255,0.1); font-size: 11px; border-top: 1px solid var(--glow); }
+    #chat-msgs { flex: 1; overflow-y: auto; padding: 10px; }
+    .msg-bubble { margin-bottom: 8px; padding: 8px; background: rgba(255,255,255,0.03); border-left: 3px solid var(--glow); font-size: 14px; cursor: pointer; }
+    .reply-preview { font-size: 10px; color: var(--glow); background: rgba(0, 242, 255, 0.1); padding: 4px; border-radius: 4px; margin-bottom: 5px; border-left: 2px solid var(--glow); }
+    @media (max-width: 768px) { .main-container { flex-direction: column; } .sidebar { width: 100%; height: 50%; border-left: none; border-top: 1px solid var(--border); } }
+    .btn { padding: 6px 10px; background: transparent; color: var(--glow); border: 1px solid var(--glow); cursor: pointer; font-size: 9px; font-weight: bold; border-radius: 3px; text-transform: uppercase; }
     .admin-only { display: none; }
     .admin-mode .admin-only { display: inline-block; }
     .hidden { display: none !important; }
@@ -53,34 +40,31 @@
 <body>
 
   <div id="bossAlert"><div class="boss-text">BOSS ENTERED</div></div>
-  <div id="flashBox">
-    <div style="color:var(--gold); font-family:'Orbitron'; font-size:14px; margin-bottom:10px;">⚠️ DIRECTIVE ⚠️</div>
-    <div class="flash-text" id="flashContent"></div>
-  </div>
-
+  <div id="flashBox"><div class="boss-text" id="flashContent" style="color:var(--gold); font-size: 30px;"></div></div>
   <audio id="siren" src="https://www.soundjay.com/buttons/beep-01a.mp3"></audio>
 
   <div id="loginBox" class="overlay">
-    <div class="login-header">SECURE ACCESS</div>
-    <div class="input-group">
-      <input type="text" id="uName" placeholder="Admin">
-      <input type="password" id="uCode" placeholder="PASSKEY">
+    <div class="login-card">
+      <div class="login-header">SECURE ACCESS</div>
+      <div class="input-group">
+        <input type="text" id="uName" placeholder="NAME">
+        <input type="password" id="uCode" placeholder="PASSKEY">
+      </div>
+      <button class="login-btn" onclick="enterSuite()">LOGIN HQ</button>
     </div>
-    <button class="login-btn" onclick="enterSuite()">AUTHORIZE LOGIN</button>
-    <p id="err" style="color:var(--danger); font-size:11px; margin-top:12px;"></p>
   </div>
 
   <header class="top-header hidden" id="headerUI">
-    <div style="display:flex; gap:10px; align-items:center;">
-      <span class="live-tag" id="onlineCount">LIVE: 1</span>
-      <button class="btn admin-only btn-gold" onclick="sendFlash()">⚡ FLASH</button>
-      <button class="btn admin-only" onclick="setYT()">🎵 YT VIDEO</button>
+    <div style="display:flex; gap:8px; align-items:center;">
+      <span id="onlineCount" style="color:#25D366; font-size:10px; border:1px solid #25D366; padding:2px 5px; font-family:'Orbitron';">LIVE: 1</span>
+      <button class="btn admin-only" onclick="sendFlash()" style="color:var(--gold); border-color:var(--gold);">⚡ FLASH</button>
+      <button class="btn admin-only" onclick="inviteUser()">📲 INVITE</button>
+      <button class="btn admin-only" onclick="deleteAllChats()" style="color:var(--danger); border-color:var(--danger);">🗑️ CLEAR</button>
     </div>
-    <div style="display:flex; gap:10px;">
-      <button class="btn admin-only" onclick="inviteUser()" style="border-color:#25D366; color:#25D366;">INVITE</button>
-      <button class="btn admin-only btn-danger" onclick="purgeChat()">PURGE</button>
+    <div style="display:flex; gap:5px;">
+      <button class="btn admin-only" onclick="setYT()">🎵 YT</button>
       <button class="btn" onclick="toggleCam()">📹 CAM</button>
-      <button class="btn btn-danger" onclick="location.reload()">EXIT</button>
+      <button class="btn btn-danger" onclick="location.reload()" style="color:var(--danger); border-color:var(--danger);">EXIT</button>
     </div>
   </header>
 
@@ -88,13 +72,15 @@
     <div class="video-grid" id="videoArea">
       <div class="video-card"><video id="localVid" autoplay muted playsinline></video></div>
     </div>
-    
     <div class="sidebar">
       <div id="yt-area"><iframe id="yt-player" width="100%" height="100%" src="" frameborder="0" allow="autoplay" allowfullscreen></iframe></div>
       <div id="chat-msgs"></div>
-      <div id="reply-box">Reply to: <span id="rep-name" style="color:var(--glow);"></span> <span onclick="cancelReply()" style="float:right; cursor:pointer; color:red;">X</span></div>
-      <div style="padding:15px; display:flex; gap:8px; border-top:1px solid var(--border);">
-        <input type="text" id="mInp" placeholder="Signal..." style="flex:1; background:transparent; border:none; color:white; outline:none;">
+      <div id="replyBar" class="hidden" style="padding:5px 10px; background:rgba(0,0,0,0.5); font-size:10px; color:var(--glow); display:flex; justify-content:space-between; align-items:center;">
+        <span id="replyTxt"></span>
+        <span style="cursor:pointer" onclick="cancelReply()">✕</span>
+      </div>
+      <div style="padding:10px; display:flex; gap:5px; border-top:1px solid var(--border);">
+        <input type="text" id="mInp" placeholder="Type signal..." style="flex:1; background:transparent; border:none; color:white; outline:none;">
         <button class="btn" onclick="sendChat()">SEND</button>
       </div>
     </div>
@@ -118,25 +104,74 @@
       const n = document.getElementById("uName").value.trim();
       const c = document.getElementById("uCode").value.trim();
       if(!n) return;
-
-      if(c === "1661@786") {
+      if(n.toLowerCase() === "admin" && c === "1661@786") {
         isAdmin = true;
         document.body.classList.add("admin-mode");
         db.collection('rooms').doc(rid).set({ bossSignal: Date.now() }, {merge:true});
       }
-
       myName = n;
       document.getElementById("loginBox").style.display = "none";
       document.getElementById("headerUI").classList.remove("hidden");
       document.getElementById("suiteUI").classList.remove("hidden");
-      
       initChat(); listenBoss(); listenYT(); listenFlash(); updateOnline();
     }
 
-    // --- FLASH ANNOUNCEMENT ---
-    async function sendFlash() {
-      const msg = prompt("Enter Flash Announcement (Visible to Everyone):");
-      if(msg) await db.collection('rooms').doc(rid).update({ flashMsg: msg, flashTime: Date.now() });
+    async function deleteAllChats() {
+      if (!confirm("Delete all messages for everyone?")) return;
+      const msgsRef = db.collection('rooms').doc(rid).collection('messages');
+      const snapshot = await msgsRef.get();
+      const batch = db.batch();
+      snapshot.docs.forEach(doc => batch.delete(doc.ref));
+      await batch.commit();
+    }
+
+    function setReply(name, text) {
+      replyData = { name, text };
+      document.getElementById("replyBar").classList.remove("hidden");
+      document.getElementById("replyTxt").innerText = `Replying to ${name}...`;
+      document.getElementById("mInp").focus();
+    }
+
+    function cancelReply() {
+      replyData = null;
+      document.getElementById("replyBar").classList.add("hidden");
+    }
+
+    function sendChat() {
+      const i = document.getElementById("mInp");
+      if(!i.value) return;
+      const msgObj = { name: myName, text: i.value, time: Date.now() };
+      if(replyData) { msgObj.replyTo = replyData; cancelReply(); }
+      db.collection('rooms').doc(rid).collection('messages').add(msgObj);
+      i.value = "";
+    }
+
+    function initChat() {
+      db.collection('rooms').doc(rid).collection('messages').orderBy('time').onSnapshot(snap => {
+        const box = document.getElementById("chat-msgs"); box.innerHTML = "";
+        snap.forEach(doc => {
+          const d = doc.data();
+          let replyHtml = d.replyTo ? `<div class="reply-preview">⮑ ${d.replyTo.name}: ${d.replyTo.text}</div>` : "";
+          box.innerHTML += `<div class="msg-bubble" onclick="setReply('${d.name}', '${d.text}')">${replyHtml}<b>${d.name}:</b> ${d.text}</div>`;
+        });
+        box.scrollTop = box.scrollHeight;
+      });
+    }
+
+    function listenBoss() {
+      db.collection('rooms').doc(rid).onSnapshot(doc => {
+        if(doc.exists && doc.data().bossSignal) {
+          const alert = document.getElementById("bossAlert");
+          alert.style.display = "flex";
+          document.getElementById("siren").play().catch(e => {});
+          setTimeout(() => { alert.style.display = "none"; }, 4000);
+        }
+      });
+    }
+
+    function sendFlash() {
+      const msg = prompt("Announcement:");
+      if(msg) db.collection('rooms').doc(rid).update({ flashMsg: msg, flashTime: Date.now() });
     }
 
     function listenFlash() {
@@ -145,33 +180,31 @@
           const box = document.getElementById("flashBox");
           document.getElementById("flashContent").innerText = doc.data().flashMsg;
           box.style.display = "flex";
-          document.getElementById("siren").play();
-          setTimeout(() => { box.style.display = "none"; }, 6000);
+          document.getElementById("siren").play().catch(e => {});
+          setTimeout(() => { box.style.display = "none"; }, 5000);
         }
       });
     }
 
-    // --- REALTIME TOOLS ---
     function updateOnline() {
       setInterval(() => { db.collection('rooms').doc(rid).collection('online').doc(myName).set({ t: Date.now() }); }, 10000);
       db.collection('rooms').doc(rid).collection('online').onSnapshot(snap => {
-        let count = 0; const now = Date.now();
-        snap.forEach(d => { if(now - d.data().t < 30000) count++; });
+        let count = 0; snap.forEach(d => { if(Date.now() - d.data().t < 30000) count++; });
         document.getElementById("onlineCount").innerText = "LIVE: " + count;
       });
     }
 
     function inviteUser() {
       const t = prompt("Invite Name:");
-      if(t) window.open(`https://wa.me/?text=🚨 ACCESS GRANTED. Join HQ: ${window.location.origin}${window.location.pathname}?join=${encodeURIComponent(t)}`);
+      if(t) window.open(`https://wa.me/?text=JOIN HQ: ${window.location.origin}${window.location.pathname}?join=${t}`);
     }
 
     function setYT() {
-      const url = prompt("YT Link:");
+      const url = prompt("YouTube URL:");
       if(url) {
         let id = url.includes("v=") ? url.split("v=")[1].split("&")[0] : url.split("be/")[1];
         db.collection('rooms').doc(rid).update({ ytId: id });
-      } else { db.collection('rooms').doc(rid).update({ ytId: null }); }
+      }
     }
 
     function listenYT() {
@@ -183,50 +216,6 @@
         } else { area.style.display = "none"; }
       });
     }
-
-    function listenBoss() {
-      db.collection('rooms').doc(rid).onSnapshot(doc => {
-        if(doc.exists && doc.data().bossSignal) {
-          document.getElementById("bossAlert").style.display = "flex";
-          document.getElementById("siren").play();
-          setTimeout(() => { document.getElementById("bossAlert").style.display = "none"; }, 4000);
-        }
-      });
-    }
-
-    async function purgeChat() {
-      if(confirm("Clear logs?")) {
-        const snap = await db.collection('rooms').doc(rid).collection('messages').get();
-        snap.forEach(d => d.ref.delete());
-      }
-    }
-
-    // --- CHAT ---
-    function sendChat() {
-      const i = document.getElementById("mInp");
-      if(!i.value) return;
-      db.collection('rooms').doc(rid).collection('messages').add({ name: myName, text: i.value, time: Date.now(), reply: replyData });
-      i.value = ""; cancelReply();
-    }
-
-    function initChat() {
-      db.collection('rooms').doc(rid).collection('messages').orderBy('time').onSnapshot(snap => {
-        const box = document.getElementById("chat-msgs"); box.innerHTML = "";
-        snap.forEach(doc => {
-          const d = doc.data();
-          let r = d.reply ? `<small style="color:#777">⬑ ${d.reply.u}</small><br>` : "";
-          box.innerHTML += `<div class="msg-bubble" onclick="setReply('${d.name}', '${d.text}')">${r}<b>${d.name}:</b> ${d.text}</div>`;
-        });
-        box.scrollTop = box.scrollHeight;
-      });
-    }
-
-    function setReply(u, t) {
-      replyData = { u, t };
-      document.getElementById("reply-box").style.display = "block";
-      document.getElementById("rep-name").innerText = u;
-    }
-    function cancelReply() { replyData = null; document.getElementById("reply-box").style.display = "none"; }
 
     async function toggleCam() {
       const s = await navigator.mediaDevices.getUserMedia({video:true, audio:true});
