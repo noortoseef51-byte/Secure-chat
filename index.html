@@ -1,43 +1,44 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>HQ FINAL STABLE</title>
+  <title>HQ ULTIMATE CONTROL</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
   <style>
-    :root { --glow: #00f2ff; --red: #ff0000; --bg: #050507; --panel: #0a0a0c; --gold: #ffd700; }
+    :root { --glow: #00f2ff; --red: #ff4444; --bg: #050507; --panel: #0d0d12; --gold: #ffd700; }
     body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; height: 100dvh; display: flex; flex-direction: column; }
     
-    #bossAlert { position: fixed; inset: 0; z-index: 99999; display: none; justify-content: center; align-items: center; flex-direction: column; background: rgba(255, 0, 0, 0.2); animation: alertFlash 0.4s infinite; border: 6px double var(--red); pointer-events: none; }
-    @keyframes alertFlash { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
-    .boss-name { font-family: 'Orbitron'; font-size: clamp(25px, 10vw, 50px); color: var(--gold); text-shadow: 0 0 20px var(--red); font-weight: 900; }
+    /* ALERT */
+    #bossAlert { position: fixed; inset: 0; z-index: 99999; display: none; justify-content: center; align-items: center; flex-direction: column; background: rgba(0, 0, 0, 0.85); animation: alertFlash 0.5s infinite alternate; border: 4px solid var(--gold); pointer-events: none; }
+    @keyframes alertFlash { from { box-shadow: inset 0 0 40px var(--red); } to { box-shadow: inset 0 0 80px var(--gold); } }
+    .boss-name { font-family: 'Orbitron'; font-size: clamp(25px, 9vw, 50px); color: var(--gold); text-shadow: 0 0 20px var(--gold); font-weight: 900; }
 
-    .btn { padding: 8px 12px; background: rgba(0, 242, 255, 0.05); color: var(--glow); border: 1px solid var(--glow); cursor: pointer; font-size: 9px; font-weight: bold; border-radius: 4px; text-transform: uppercase; font-family: 'Orbitron'; transition: 0.2s; }
-    .btn:hover { background: var(--glow); color: black; box-shadow: 0 0 10px var(--glow); }
-    .btn-red { color: #ff4444; border-color: #ff4444; }
+    /* GLOW BUTTONS */
+    .btn { padding: 8px 12px; background: rgba(255,255,255,0.05); color: var(--glow); border: 1px solid var(--glow); cursor: pointer; font-size: 9px; font-weight: bold; border-radius: 5px; text-transform: uppercase; font-family: 'Orbitron'; transition: 0.2s; }
+    .btn:hover { background: var(--glow); color: black; box-shadow: 0 0 15px var(--glow); }
+    .btn-red { color: var(--red); border-color: var(--red); }
+    .btn-red:hover { background: var(--red); box-shadow: 0 0 15px var(--red); }
 
-    header { background: var(--panel); padding: 10px 15px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0, 242, 255, 0.2); align-items: center; gap: 8px; flex-wrap: wrap; }
-    .main { display: flex; flex: 1; overflow: hidden; }
+    header { background: var(--panel); padding: 10px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0, 242, 255, 0.2); align-items: center; gap: 5px; flex-wrap: wrap; }
+    .main { display: flex; flex: 1; overflow: hidden; flex-direction: column; }
+    @media (min-width: 768px) { .main { flex-direction: row; } }
 
-    /* ADJUSTED CAM GRID (NOT TOO SMALL) */
-    #camGrid { flex: 1.5; background: #000; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; padding: 12px; overflow-y: auto; align-content: start; }
-    .cam-box { position: relative; background: #111; border: 1px solid #333; border-radius: 6px; overflow: hidden; aspect-ratio: 4/3; box-shadow: 0 0 15px rgba(0,0,0,0.5); }
-    .cam-box video { width: 100%; height: 100%; object-fit: cover; }
-    .cam-label { position: absolute; bottom: 5px; left: 5px; background: rgba(0,0,0,0.8); color: var(--glow); font-size: 9px; padding: 2px 6px; border: 1px solid var(--glow); font-family: 'Orbitron'; border-radius: 2px; }
-    .label-vip { color: var(--gold); border-color: var(--gold); }
+    #camGrid { flex: 1.2; background: #000; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; padding: 12px; overflow-y: auto; align-content: start; }
+    .cam-box { position: relative; background: #111; border: 1px solid #333; border-radius: 8px; overflow: hidden; aspect-ratio: 4/3; }
+    .cam-label { position: absolute; bottom: 5px; left: 5px; background: rgba(0,0,0,0.8); color: var(--glow); font-size: 9px; padding: 2px 6px; border: 1px solid var(--glow); font-family: 'Orbitron'; border-radius: 3px; }
+    .label-vip { color: var(--gold); border-color: var(--gold); box-shadow: 0 0 10px rgba(255,215,0,0.3); }
 
-    .chat-side { flex: 1; display: flex; flex-direction: column; background: #08080a; min-width: 280px; border-left: 1px solid #222; }
+    .chat-side { flex: 1; display: flex; flex-direction: column; background: #08080a; border-left: 1px solid #222; }
     #msgs { flex: 1; overflow-y: auto; padding: 12px; font-size: 13px; }
-    .msg { margin-bottom: 8px; padding: 8px; background: rgba(255,255,255,0.03); border-left: 2px solid #444; border-radius: 0 4px 4px 0; }
-    .msg-vip { border-left-color: var(--gold); color: var(--gold); background: rgba(255, 215, 0, 0.04); }
-    .act-btn { font-size: 8px; cursor: pointer; border: 1px solid #555; padding: 2px 5px; border-radius: 3px; margin-left: 5px; float: right; color: var(--glow); text-transform: uppercase; }
+    .msg { margin-bottom: 8px; padding: 8px; background: rgba(255,255,255,0.02); border-left: 3px solid #333; position: relative; border-radius: 0 5px 5px 0; }
+    .msg-vip { border-left-color: var(--gold); color: var(--gold); background: rgba(255,215,0,0.05); }
+    
+    .act-btn { font-size: 7px; cursor: pointer; border: 1px solid #444; padding: 2px 5px; border-radius: 3px; margin-left: 4px; float: right; color: var(--glow); font-family: 'Orbitron'; margin-top: 2px; }
 
-    .input-box { padding: 12px; display: flex; gap: 8px; background: #0c0c0e; border-top: 1px solid #1a1a1a; }
-    .input-box input { flex: 1; background: #000; border: 1px solid #222; color: white; padding: 12px; border-radius: 5px; outline: none; }
+    .input-box { padding: 10px; display: flex; gap: 5px; background: #0c0c0e; border-top: 1px solid #1a1a1a; }
+    .input-box input { flex: 1; background: #000; border: 1px solid #333; color: white; padding: 10px; border-radius: 5px; outline: none; }
 
     #login { position: fixed; inset: 0; z-index: 100000; background: #000; display: flex; justify-content: center; align-items: center; }
     .hidden { display: none !important; }
@@ -48,30 +49,30 @@
   <audio id="beep" src="https://www.soundjay.com/buttons/beep-01a.mp3"></audio>
 
   <div id="bossAlert">
-    <div class="boss-name" id="alertName">HQ ACCESS</div>
+    <div class="boss-name" id="alertName">ADMIN</div>
+    <div style="color:var(--gold); font-family:Orbitron; font-size:10px; margin-top:10px; letter-spacing:2px;">SUPER ENTRY ACTIVATED</div>
   </div>
 
   <div id="login">
-    <div style="background:#0a0a0c; padding:35px; border:1px solid var(--glow); text-align:center; width:280px; border-radius:12px; box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);">
-      <h2 style="font-family:Orbitron; color:var(--glow); font-size:18px; margin-bottom:20px; letter-spacing:2px;">HQ TERMINAL</h2>
-      <input type="text" id="u" placeholder="USERNAME" style="width:100%; padding:14px; margin:8px 0; background:#000; color:white; border:1px solid #333; box-sizing:border-box; border-radius:4px;">
-      <input type="password" id="p" placeholder="CODE" style="width:100%; padding:14px; margin:8px 0; background:#000; color:white; border:1px solid #333; box-sizing:border-box; border-radius:4px;">
-      <button class="btn" style="width:100%; padding:14px; margin-top:10px;" onclick="connect()">ENTER SYSTEM</button>
+    <div style="background:var(--panel); padding:30px; border:1px solid var(--glow); text-align:center; width:260px; border-radius:15px; box-shadow: 0 0 20px rgba(0,242,255,0.1);">
+      <h2 style="font-family:Orbitron; color:var(--glow); font-size:16px; margin-bottom:20px;">HQ LOGIN</h2>
+      <input type="text" id="u" placeholder="USERNAME" style="width:100%; padding:12px; margin:5px 0; background:#000; color:white; border:1px solid #333; box-sizing:border-box;">
+      <input type="password" id="p" placeholder="CODE" style="width:100%; padding:12px; margin:5px 0; background:#000; color:white; border:1px solid #333; box-sizing:border-box;">
+      <button class="btn" style="width:100%; justify-content:center; padding:12px;" onclick="connect()">BOOT SYSTEM</button>
     </div>
   </div>
 
   <header id="h" class="hidden">
-    <div style="display:flex; align-items:center; gap:8px;">
-      <span id="myNameLabel" style="font-family:'Orbitron'; font-size:10px; color:var(--glow); border:1px solid var(--glow); padding:2px 8px;">HQ</span>
-      <button class="btn" id="flashBtn" style="display:none; background:var(--red); color:white;" onclick="triggerFlash()">🚨 FLASH</button>
+    <div style="display:flex; gap:5px; align-items:center;">
+      <span id="myNameLabel" style="font-family:'Orbitron'; font-size:10px; color:var(--glow); border:1px solid var(--glow); padding:2px 6px;">HQ</span>
+      <button class="btn" id="flashBtn" style="display:none; color:white; background:var(--red);" onclick="triggerFlash()">🚨 FLASH</button>
       <button class="btn" id="lockBtn" style="display:none; color:var(--gold); border-color:var(--gold);" onclick="toggleLock()">🔓</button>
     </div>
-    <div style="display:flex; gap:5px; flex-wrap: wrap;">
+    <div style="display:flex; gap:4px; flex-wrap: wrap;">
       <button class="btn" onclick="playMusic()">🎵 YT</button>
-      <button class="btn btn-red" onclick="stopYT()">⏹️</button>
-      <button class="btn" id="camBtn" onclick="toggleCam()">📹 CAM</button>
+      <button class="btn btn-red" onclick="stopYT()">⏹️ STOP</button>
+      <button class="btn" onclick="toggleCam()">📹 CAM</button>
       <button class="btn" onclick="inviteWhatsApp()">🔗 INVITE</button>
-      <button class="btn btn-red" id="adminDel" style="display:none;" onclick="clearData()">🗑️</button>
       <button class="btn btn-red" onclick="location.reload()">EXIT</button>
     </div>
   </header>
@@ -79,7 +80,7 @@
   <div id="main" class="main hidden">
     <div id="camGrid"></div>
     <div class="chat-side">
-      <iframe id="yt-frame" style="width:100%; height:160px; display:none; border:none;" src="" allow="autoplay"></iframe>
+      <iframe id="yt-frame" style="width:100%; height:140px; display:none; border:none;" src="" allow="autoplay"></iframe>
       <div id="msgs"></div>
       <div class="input-box">
         <input type="text" id="mInp" placeholder="Message..." onkeypress="if(event.key==='Enter') sendMsg()">
@@ -102,17 +103,18 @@
     async function connect() {
       const n = document.getElementById("u").value.trim().toUpperCase();
       const pass = document.getElementById("p").value;
-      const room = await db.collection('rooms').doc('hq').get();
-      if(room.data()?.locked && n !== "SHEHROZ") { alert("SYSTEM LOCKED"); return; }
-
       if(n === "ADMIN" && pass === "1661@786") {
         myName = "SHEHROZ"; isAdmin = true;
-        document.getElementById("adminDel").style.display="block"; document.getElementById("flashBtn").style.display="block"; document.getElementById("lockBtn").style.display="block";
-      } else if(pass === "1234") { myName = n; } else { alert("ACCESS DENIED"); return; }
-
+        document.getElementById("lockBtn").style.display="flex";
+        document.getElementById("flashBtn").style.display="flex";
+      } else if(pass === "1234") { myName = n; } else { alert("DENIED"); return; }
+      
       peer = new Peer('HQ-' + myName);
       peer.on('call', call => { call.answer(camStream); call.on('stream', s => addVideo(call.peer.replace('HQ-',''), s)); });
-      triggerFlash();
+      
+      const vDoc = await db.collection('rooms').doc('hq').collection('vips').doc(myName).get();
+      if(myName === "SHEHROZ" || vDoc.exists) triggerFlash();
+
       document.getElementById("login").classList.add("hidden");
       document.getElementById("h").classList.remove("hidden");
       document.getElementById("main").classList.remove("hidden");
@@ -130,7 +132,11 @@
           const d = doc.data(); const isV = vips.includes(d.name) || d.name === "SHEHROZ";
           box.innerHTML += `<div class="msg ${isV?'msg-vip':''}"><b>${d.name}:</b> ${d.msg} 
             <span class="act-btn" onclick="setReply('${d.name}')">Reply</span>
-            ${isAdmin && d.name !== "SHEHROZ" ? `<span class="act-btn" style="color:red;" onclick="kickUser('${d.name}')">KICK</span><span class="act-btn" style="color:var(--gold);" onclick="makeVIP('${d.name}')">VIP</span>` : ''}
+            ${isAdmin && d.name !== "SHEHROZ" ? `
+              <span class="act-btn" style="color:red;" onclick="kickUser('${d.name}')">KICK</span>
+              <span class="act-btn" style="color:#ffae00;" onclick="removeVIP('${d.name}')">REMOVE VIP</span>
+              <span class="act-btn" style="color:var(--gold);" onclick="makeVIP('${d.name}')">ADD VIP</span>
+            ` : ''}
           </div>`;
         }); box.scrollTop = box.scrollHeight;
       });
@@ -138,14 +144,13 @@
       db.collection('rooms').doc('hq').onSnapshot(doc => {
         const d = doc.data(); if(!d) return;
         if(d.signal > lastSig) {
-          const isV = vips.includes(d.boss) || d.boss === "SHEHROZ";
-          document.getElementById("alertName").innerText = d.boss + (isV ? " (VIP) ENTERED" : " ENTERED");
+          document.getElementById("alertName").innerText = d.boss;
           document.getElementById("bossAlert").style.display = "flex";
           document.getElementById("beep").play().catch(()=>{});
-          setTimeout(() => { document.getElementById("bossAlert").style.display = "none"; }, 3500);
+          setTimeout(() => { document.getElementById("bossAlert").style.display = "none"; }, 4000);
           lastSig = d.signal;
         }
-        document.getElementById("lockBtn").innerText = d.locked ? "🔒 LOCKED" : "🔓 OPEN";
+        document.getElementById("lockBtn").innerText = d.locked ? "🔒" : "🔓";
         const f = document.getElementById("yt-frame");
         if(d.ytId) { f.style.display="block"; if(!f.src.includes(d.ytId)) f.src=`https://www.youtube.com/embed/${d.ytId}?autoplay=1`; }
         else { f.style.display="none"; f.src=""; }
@@ -177,11 +182,12 @@
     function sendMsg() { const i = document.getElementById("mInp"); if(!i.value) return; db.collection('rooms').doc('hq').collection('chat').add({ name: myName, msg: i.value, time: Date.now() }); i.value = ""; }
     function setReply(u) { document.getElementById("mInp").value = `@${u} : `; document.getElementById("mInp").focus(); }
     function kickUser(u) { if(confirm("Kick "+u+"?")) db.collection('rooms').doc('hq').collection('kicked').doc(u).set({kicked:true}); }
-    function makeVIP(u) { if(confirm("Make "+u+" VIP?")) db.collection('rooms').doc('hq').collection('vips').doc(u).set({vip:true}); }
+    function makeVIP(u) { if(confirm("Add "+u+" to VIP?")) db.collection('rooms').doc('hq').collection('vips').doc(u).set({vip:true}); }
+    function removeVIP(u) { if(confirm("Remove VIP from "+u+"?")) db.collection('rooms').doc('hq').collection('vips').doc(u).delete(); }
     function toggleLock() { db.collection('rooms').doc('hq').get().then(doc => db.collection('rooms').doc('hq').update({locked: !doc.data().locked})); }
     function inviteWhatsApp() { window.open(`https://wa.me/?text=Join HQ: ${window.location.href}`, '_blank'); }
+    function playMusic() { const u = prompt("YT Link:"); if(u) { let id = u.split("v=")[1]?.split("&")[0] || u.split("be/")[1]; db.collection('rooms').doc('hq').update({ ytId: id }); } }
     function stopYT() { db.collection('rooms').doc('hq').update({ ytId: firebase.firestore.FieldValue.delete() }); }
-    function clearData() { if(confirm("Clear Chat?")) db.collection('rooms').doc('hq').collection('chat').get().then(s=>s.forEach(d=>d.ref.delete())); }
   </script>
 </body>
 </html>
