@@ -2,46 +2,52 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>HQ COMMAND CENTER</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    :root { --glow: #00f2ff; --red: #ff0000; --panel: #0a0a0c; }
-    body { background: #050507; color: white; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
+    :root { --glow: #00f2ff; --red: #ff0000; --bg: #050507; --panel: #0a0a0c; --gold: #ffd700; }
+    body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; height: 100dvh; display: flex; flex-direction: column; }
     
+    /* Cyber Super Entry Alert */
     #bossAlert {
       position: fixed; inset: 0; z-index: 99999; display: none;
       justify-content: center; align-items: center; flex-direction: column;
-      background: rgba(255, 0, 0, 0.2); animation: flash 0.5s infinite;
-      pointer-events: none; text-align: center; padding: 20px;
+      background: rgba(255, 0, 0, 0.15); animation: flash 0.4s infinite;
+      pointer-events: none; text-align: center; border: 4px double var(--red);
     }
-    @keyframes flash { 0%, 100% { background: rgba(255,0,0,0.1); } 50% { background: rgba(255,0,0,0.4); } }
-    .boss-name { font-family: 'Orbitron'; font-size: clamp(30px, 8vw, 70px); color: #ffd700; text-shadow: 0 0 30px red; margin: 0; }
+    @keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .boss-name { font-family: 'Orbitron'; font-size: clamp(35px, 10vw, 80px); color: var(--gold); text-shadow: 0 0 20px var(--red), 0 0 40px var(--red); margin: 0; letter-spacing: 2px; }
 
     #login { position: fixed; inset: 0; z-index: 100000; background: #000; display: flex; justify-content: center; align-items: center; }
-    .login-card { background: rgba(255,255,255,0.03); padding: 30px; border-radius: 15px; border: 1px solid var(--glow); width: 90%; max-width: 320px; text-align: center; }
-    .login-card input { width: 100%; padding: 12px; margin: 8px 0; background: #000; border: 1px solid #333; color: white; border-radius: 5px; outline: none; box-sizing: border-box; }
+    .login-card { background: #0a0a0c; padding: 40px 30px; border-radius: 10px; border: 1px solid var(--glow); width: 90%; max-width: 350px; text-align: center; box-shadow: 0 0 20px rgba(0, 242, 255, 0.2); }
+    .login-card h1 { color: var(--glow); font-family: 'Orbitron'; font-size: 22px; margin-bottom: 25px; letter-spacing: 3px; }
+    .login-card input { width: 100%; padding: 15px; margin: 10px 0; background: #000; border: 1px solid #1a1a1a; color: white; border-radius: 4px; outline: none; font-size: 16px; }
     
-    header { background: var(--panel); padding: 10px 15px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0, 242, 255, 0.3); align-items: center; flex-wrap: wrap; }
-    .btn { padding: 6px 10px; background: transparent; color: var(--glow); border: 1px solid var(--glow); cursor: pointer; font-size: 10px; font-weight: bold; border-radius: 4px; text-transform: uppercase; transition: 0.2s; }
+    header { background: var(--panel); padding: 12px 20px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0, 242, 255, 0.2); align-items: center; flex-wrap: wrap; gap: 10px; }
+    .btn { padding: 8px 14px; background: transparent; color: var(--glow); border: 1px solid var(--glow); cursor: pointer; font-size: 11px; font-weight: bold; border-radius: 2px; text-transform: uppercase; font-family: 'Orbitron'; }
     .btn-red { color: #ff4444; border-color: #ff4444; }
-    .btn-flash { background: var(--red); color: white; border: none; display: none; }
+    .btn-flash { background: var(--red); color: white; border: none; display: none; padding: 8px 16px; }
 
     .main { display: flex; flex: 1; overflow: hidden; }
-    .video-side { flex: 2; background: #000; }
-    .chat-side { flex: 1; display: flex; flex-direction: column; background: #08080a; border-left: 1px solid #222; min-width: 300px; }
+    .video-side { flex: 2; background: #000; border-right: 1px solid #111; }
+    .chat-side { flex: 1; display: flex; flex-direction: column; background: #08080a; min-width: 320px; }
 
     @media (max-width: 768px) {
       .main { flex-direction: column; }
-      .chat-side { min-width: 100%; flex: 1.5; border-top: 1px solid #222; }
-      header { justify-content: center; gap: 8px; }
+      .chat-side { min-width: 100%; flex: 1.5; }
+      .video-side { height: 35%; }
     }
     
-    #msgs { flex: 1; overflow-y: auto; padding: 12px; font-size: 13px; }
-    .msg { margin-bottom: 8px; padding: 8px; background: rgba(255,255,255,0.02); border-radius: 5px; }
-    .reply-tag { font-size: 9px; color: var(--glow); cursor: pointer; margin-left: 8px; border: 1px solid var(--glow); padding: 1px 4px; border-radius: 3px; }
-    .input-box { padding: 10px; display: flex; gap: 8px; background: #0c0c0e; border-top: 1px solid #222; }
-    .input-box input { flex: 1; background: #000; border: 1px solid #333; color: white; padding: 10px; border-radius: 4px; outline: none; }
+    #msgs { flex: 1; overflow-y: auto; padding: 15px; font-size: 13px; }
+    .msg { margin-bottom: 10px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 4px; border-left: 2px solid #222; }
+    .msg-admin { border-left-color: var(--gold); background: rgba(255, 215, 0, 0.05); color: var(--gold); }
+    
+    .reply-tag { font-size: 9px; color: var(--glow); cursor: pointer; float: right; border: 1px solid var(--glow); padding: 2px 6px; border-radius: 2px; margin-left: 8px; }
+    .kik-btn { font-size: 9px; color: #ff4444; cursor: pointer; float: right; border: 1px solid #ff4444; padding: 2px 6px; border-radius: 2px; }
+
+    .input-box { padding: 15px; display: flex; gap: 10px; background: #0c0c0e; border-top: 1px solid #1a1a1a; padding-bottom: max(15px, env(safe-area-inset-bottom)); }
+    .input-box input { flex: 1; background: #000; border: 1px solid #222; color: white; padding: 14px; border-radius: 4px; outline: none; font-size: 16px; }
     
     .hidden { display: none !important; }
   </style>
@@ -51,29 +57,29 @@
   <audio id="beep" src="https://www.soundjay.com/buttons/beep-01a.mp3"></audio>
 
   <div id="bossAlert">
-    <div class="boss-name" id="alertName">ADMIN ENTER</div>
-    <div style="color:white; font-family:Orbitron;" id="bTime"></div>
+    <div class="boss-name" id="alertName">SUPER ENTRY</div>
+    <div style="color:white; font-family:'Orbitron'; font-size:12px; margin-top:10px;" id="bTime"></div>
   </div>
 
   <div id="login">
     <div class="login-card">
-      <h1 style="color:var(--glow); font-family:Orbitron; font-size:20px;">HQ ACCESS</h1>
-      <input type="text" id="u" placeholder="Username">
-      <input type="password" id="p" placeholder="Code">
-      <button class="btn" style="width:100%; margin-top:10px; padding:12px; border-color:var(--glow);" onclick="connect()">CONNECT</button>
+      <h1>HQ ACCESS</h1>
+      <input type="text" id="u" placeholder="USERNAME">
+      <input type="password" id="p" placeholder="ACCESS CODE">
+      <button class="btn" style="width:100%; margin-top:15px; padding:15px;" onclick="connect()">CONNECT</button>
     </div>
   </div>
 
   <header id="h" class="hidden">
-    <div style="display:flex; align-items:center; gap:10px;">
-      <span style="font-family:'Orbitron'; font-size:12px; color:var(--glow);">HQ CENTER</span>
-      <div id="liveStatus" style="font-size:10px; color:#00ff88; border:1px solid #00ff88; padding:2px 6px; border-radius:10px;">LIVE: 1</div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <span style="font-family:'Orbitron'; font-size:13px; color:var(--glow);" id="myNameLabel">HQ CENTER</span>
       <button class="btn btn-flash" id="flashBtn" onclick="triggerFlash()">🚨 FLASH</button>
     </div>
-    <div style="display:flex; gap:5px;">
+    <div style="display:flex; gap:8px;">
       <button class="btn" onclick="playMusic()">🎵 YT</button>
+      <button class="btn btn-red" onclick="stopYT()">⏹️ STOP</button>
       <button class="btn" onclick="toggleCam()">📹 CAM</button>
-      <button class="btn" onclick="invite()">🔗 INVITE</button>
+      <button class="btn" id="vipBtn" style="display:none; color:var(--gold); border-color:var(--gold);" onclick="addVIP()">⭐ VIP</button>
       <button class="btn btn-red" id="adminDel" style="display:none;" onclick="clearData()">🗑️</button>
       <button class="btn btn-red" onclick="location.reload()">EXIT</button>
     </div>
@@ -82,11 +88,11 @@
   <div id="main" class="main hidden">
     <div class="video-side"><video id="vid" autoplay muted playsinline style="width:100%; height:100%; object-fit:cover;"></video></div>
     <div class="chat-side">
-      <iframe id="yt-frame" style="width:100%; height:150px; display:none; border:none;" src="" allow="autoplay"></iframe>
+      <iframe id="yt-frame" style="width:100%; height:180px; display:none; border:none;" src="" allow="autoplay"></iframe>
       <div id="msgs"></div>
       <div class="input-box">
-        <input type="text" id="mInp" placeholder="Message..." onkeypress="if(event.key==='Enter') sendMsg()">
-        <button class="btn" onclick="sendMsg()" style="background:var(--glow); color:black; border:none;">SEND</button>
+        <input type="text" id="mInp" placeholder="Enter command..." onkeypress="if(event.key==='Enter') sendMsg()">
+        <button class="btn" onclick="sendMsg()" style="background:var(--glow); color:black; border:none; padding: 0 20px;">SEND</button>
       </div>
     </div>
   </div>
@@ -99,10 +105,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     
-    // --- VIP LIST ---
-    const vipList = ["shehroz", "admin"]; 
-
-    let myName = "", sessionStart = Date.now(), camStream = null;
+    let myName = "", sessionStart = Date.now(), camStream = null, isAdmin = false;
 
     function checkPrev() { if(localStorage.getItem("user_n")) document.getElementById("u").value = localStorage.getItem("user_n"); }
 
@@ -111,24 +114,29 @@
       const pass = document.getElementById("p").value;
       if(!n) return;
 
+      const ban = await db.collection('rooms').doc('hq').collection('banned').doc(n.toLowerCase()).get();
+      if(ban.exists) { alert("ACCESS REVOKED"); return; }
+
+      document.getElementById("beep").play().then(()=>document.getElementById("beep").pause()).catch(()=>{});
+
       if(n.toLowerCase()==="admin" && pass==="1661@786") {
-        myName = "SHEHROZ";
-        document.getElementById("flashBtn").style.display = "inline-block";
+        myName = "SHEHROZ"; isAdmin = true;
+        document.getElementById("vipBtn").style.display = "inline-block";
         document.getElementById("adminDel").style.display = "inline-block";
-        triggerFlash(); 
+        document.getElementById("flashBtn").style.display = "inline-block";
+        triggerFlash(); // Shehroz Super Entry
       } 
       else if(pass==="1234") {
-        myName = n;
-        // Sirf VIP wale ke liye alert trigger hoga
-        if(vipList.includes(n.toLowerCase())) {
-          triggerFlash();
-        }
-      } else { alert("ACCESS DENIED"); return; }
+        myName = n.toUpperCase();
+        const vip = await db.collection('rooms').doc('hq').collection('vips').doc(n.toLowerCase()).get();
+        if(vip.exists) triggerFlash(); // VIP Super Entry
+      } else { alert("DENIED"); return; }
 
       localStorage.setItem("user_n", n);
       document.getElementById("login").classList.add("hidden");
       document.getElementById("h").classList.remove("hidden");
       document.getElementById("main").classList.remove("hidden");
+      document.getElementById("myNameLabel").innerText = myName;
       startSystem();
     }
 
@@ -136,60 +144,57 @@
       db.collection('rooms').doc('hq').update({ boss: myName, signal: Date.now(), time: new Date().toLocaleTimeString() });
     }
 
+    function startSystem() {
+      db.collection('rooms').doc('hq').collection('chat').orderBy('time').onSnapshot(snap => {
+        const box = document.getElementById("msgs"); box.innerHTML = "";
+        snap.forEach(doc => { 
+          const d = doc.data();
+          const adminClass = d.name === "SHEHROZ" ? "msg-admin" : "";
+          const kik = (isAdmin && d.name !== "SHEHROZ") ? `<span class="kik-btn" onclick="kikUser('${d.name}')">KIK</span>` : "";
+          box.innerHTML += `<div class="msg ${adminClass}"><b>${d.name}:</b> ${d.msg} <span class="reply-tag" onclick="setReply('${d.name}')">Reply</span> ${kik}</div>`;
+        });
+        box.scrollTop = box.scrollHeight;
+      });
+
+      let lastSig = sessionStart;
+      db.collection('rooms').doc('hq').onSnapshot(doc => {
+        const d = doc.data();
+        if(d && d.signal > lastSig) {
+          document.getElementById("alertName").innerText = `${d.boss} ENTER`;
+          document.getElementById("bTime").innerText = d.time;
+          document.getElementById("bossAlert").style.display = "flex";
+          document.getElementById("beep").play().catch(()=>{});
+          setTimeout(() => { document.getElementById("bossAlert").style.display = "none"; }, 5000);
+          lastSig = d.signal;
+        }
+        const f = document.getElementById("yt-frame");
+        if(d && d.ytId) {
+          f.style.display = "block";
+          if(!f.src.includes(d.ytId)) f.src = `https://www.youtube.com/embed/${d.ytId}?autoplay=1`;
+        } else { f.style.display = "none"; f.src = ""; }
+      });
+    }
+
     function sendMsg() {
       const i = document.getElementById("mInp"); if(!i.value) return;
       db.collection('rooms').doc('hq').collection('chat').add({ name: myName, msg: i.value, time: Date.now() });
       i.value = "";
     }
-
-    function setReply(userName) {
-      const input = document.getElementById("mInp");
-      input.value = `@${userName} : `;
-      input.focus();
-    }
-
-    function startSystem() {
-      setInterval(() => { db.collection('rooms').doc('hq').collection('online').doc(myName).set({ lastSeen: Date.now() }); }, 5000);
-      db.collection('rooms').doc('hq').collection('online').onSnapshot(snap => {
-        let count = 0; snap.forEach(doc => { if(Date.now() - doc.data().lastSeen < 15000) count++; });
-        document.getElementById("liveStatus").innerText = `LIVE: ${count}`;
-      });
-      db.collection('rooms').doc('hq').collection('chat').orderBy('time').onSnapshot(snap => {
-        const box = document.getElementById("msgs"); box.innerHTML = "";
-        snap.forEach(doc => { 
-          const d = doc.data();
-          box.innerHTML += `<div class="msg"><b>${d.name}:</b> ${d.msg} <span class="reply-tag" onclick="setReply('${d.name}')">Reply</span></div>`;
-        });
-        box.scrollTop = box.scrollHeight;
-      });
-      db.collection('rooms').doc('hq').onSnapshot(doc => {
-        const d = doc.data();
-        if(d && d.signal > sessionStart) {
-          document.getElementById("alertName").innerText = `${d.boss} ENTER`;
-          document.getElementById("bTime").innerText = d.time;
-          document.getElementById("bossAlert").style.display = "flex";
-          document.getElementById("beep").play().catch(()=>{});
-          setTimeout(() => { document.getElementById("bossAlert").style.display = "none"; sessionStart = Date.now(); }, 5000);
-        }
-        if(d && d.ytId) {
-          const f = document.getElementById("yt-frame"); f.style.display = "block";
-          f.src = `https://www.youtube.com/embed/${d.ytId}?autoplay=1`;
-        }
-      });
-    }
-
-    async function toggleCam() {
-      if(!camStream) { camStream = await navigator.mediaDevices.getUserMedia({video:true, audio:true}); document.getElementById("vid").srcObject = camStream; }
-      else { camStream.getTracks().forEach(t => t.stop()); document.getElementById("vid").srcObject = null; camStream = null; }
-    }
-
+    function setReply(u) { const i = document.getElementById("mInp"); i.value = `@${u} : `; i.focus(); }
     function playMusic() {
-      const u = prompt("YT Link:");
-      if(u) { let id = u.includes("v=")?u.split("v=")[1].split("&")[0]:u.split("be/")[1]; db.collection('rooms').doc('hq').update({ ytId: id }); }
+      const u = prompt("YouTube Link:");
+      if(u) { let id = u.split("v=")[1]?.split("&")[0] || u.split("be/")[1]; db.collection('rooms').doc('hq').update({ ytId: id }); }
     }
-
-    function invite() { prompt("Copy Link:", window.location.href); }
-    function clearData() { if(confirm("Clear Chat?")) db.collection('rooms').doc('hq').collection('chat').get().then(s=>s.forEach(d=>d.ref.delete())); }
+    function stopYT() { db.collection('rooms').doc('hq').update({ ytId: firebase.firestore.FieldValue.delete() }); }
+    function addVIP() { const v = prompt("VIP User Name:"); if(v) db.collection('rooms').doc('hq').collection('vips').doc(v.toLowerCase()).set({a:1}); }
+    function kikUser(u) { if(confirm("Ban "+u+"?")) db.collection('rooms').doc('hq').collection('banned').doc(u.toLowerCase()).set({a:1}); }
+    function clearData() { if(confirm("Clear logs?")) db.collection('rooms').doc('hq').collection('chat').get().then(s=>s.forEach(d=>d.ref.delete())); }
+    async function toggleCam() {
+      const v = document.getElementById("vid");
+      if(!camStream) { 
+        camStream = await navigator.mediaDevices.getUserMedia({video:true, audio:true}); v.srcObject = camStream;
+      } else { camStream.getTracks().forEach(t => t.stop()); v.srcObject = null; camStream = null; }
+    }
   </script>
 </body>
 </html>
