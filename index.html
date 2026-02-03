@@ -12,12 +12,13 @@
     
     #bossAlert { position: fixed; inset: 0; z-index: 99999; display: none; justify-content: center; align-items: center; flex-direction: column; background: rgba(0,0,0,0.9); border: 2px solid var(--gold); pointer-events: none; animation: alertFlash 0.5s infinite alternate; }
     @keyframes alertFlash { from { box-shadow: inset 0 0 20px var(--red); } to { box-shadow: inset 0 0 50px var(--gold); } }
-    .boss-name { font-family: 'Orbitron'; font-size: 24px; color: var(--gold); text-shadow: 0 0 10px var(--gold); }
+    .boss-name { font-family: 'Orbitron'; font-size: 24px; color: var(--gold); text-shadow: 0 0 10px var(--gold); text-transform: uppercase; text-align: center; }
 
     header { background: var(--panel); padding: 6px 10px; display: flex; justify-content: space-between; border-bottom: 1px solid var(--glow); align-items: center; overflow-x: auto; gap: 6px; scrollbar-width: none; }
     .btn { padding: 6px 10px; background: rgba(255,255,255,0.05); color: var(--glow); border: 1px solid var(--glow); cursor: pointer; font-size: 8px; font-weight: bold; border-radius: 4px; text-transform: uppercase; font-family: 'Orbitron'; white-space: nowrap; flex-shrink: 0; }
     .btn-hero { color: #fff; background: var(--cyber); border-color: var(--cyber); box-shadow: 0 0 8px var(--cyber); }
     .btn-red { color: var(--red); border-color: var(--red); }
+    .btn-gold { color: var(--gold); border-color: var(--gold); }
 
     .main { display: flex; flex: 1; overflow: hidden; flex-direction: column; }
     @media (min-width: 768px) { .main { flex-direction: row; } }
@@ -31,7 +32,7 @@
     .chat-side { flex: 1; display: flex; flex-direction: column; background: #08080a; border-left: 1px solid #222; overflow: hidden;}
     .chat-header { padding: 5px 10px; background: #111; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; }
     #msgs { flex: 1; overflow-y: auto; padding: 10px; font-size: 11px; scroll-behavior: smooth; }
-    .msg { margin-bottom: 8px; padding: 8px; background: rgba(255,255,255,0.02); border-left: 2px solid #555; border-radius: 0 5px 5px 0; line-height: 1.4; }
+    .msg { margin-bottom: 8px; padding: 8px; background: rgba(255,255,255,0.02); border-left: 2px solid #555; border-radius: 0 5px 5px 0; line-height: 1.4; word-break: break-all; }
     .msg-vip { border-left-color: var(--gold); color: var(--gold); background: rgba(255,215,0,0.05); }
     .act-btn { font-size: 7px; cursor: pointer; border: 1px solid #444; padding: 1px 4px; border-radius: 3px; margin-left: 3px; float: right; color: var(--glow); font-family: 'Orbitron'; background: #000; margin-top: 2px;}
 
@@ -60,7 +61,7 @@
     <div style="display:flex; gap:5px; align-items:center;">
       <button class="btn btn-hero" id="heroBtn" style="display:none;" onclick="triggerFlash()">⚡ HERO</button>
       <button class="btn" onclick="toggleMute()">🎙️</button>
-      <button class="btn" id="lockBtn" style="display:none; color:var(--gold);" onclick="toggleLock()">🔓</button>
+      <button class="btn btn-gold" id="lockBtn" style="display:none;" onclick="toggleLock()">UNLOCK</button>
     </div>
     <div style="display:flex; gap:4px;">
       <button class="btn" onclick="playMusic()">🎵 YT</button>
@@ -101,33 +102,45 @@
     async function connect() {
       const n = document.getElementById("u").value.trim().toUpperCase();
       const pass = document.getElementById("p").value;
+
+      // LOCK CHECK: Only SHEHROZ can bypass
+      const roomSnap = await db.collection('rooms').doc('hq').get();
+      const isLocked = roomSnap.data()?.locked || false;
+
       if(n === "ADMIN" && pass === "1661@786") {
         myName = "SHEHROZ"; isAdmin = true;
-        document.getElementById("lockBtn").style.display="inline-block";
-        document.getElementById("heroBtn").style.display="inline-block";
-        document.getElementById("clearBtn").style.display="inline-block";
-        triggerFlash(); // SUPER ENTRY ON BOOT
-      } else if(pass === "1234") { myName = n; } else { alert("DENIED"); return; }
+      } else if(pass === "1234") { 
+        if(isLocked) { alert("TERMINAL LOCKED BY ADMIN. ACCESS DENIED."); return; }
+        myName = n; 
+      } else { 
+        alert("DENIED: INVALID CODE"); return; 
+      }
       
       localStorage.setItem("user_n", n);
       peer = new Peer('HQ-' + myName);
       peer.on('call', call => { call.answer(camStream); call.on('stream', s => addVideo(call.peer.replace('HQ-',''), s)); });
       
-      db.collection('rooms').doc('hq').collection('vips').onSnapshot(snap => { 
-        vips = snap.docs.map(doc => doc.id);
-        if(vips.includes(myName) || myName === "SHEHROZ") {
-            document.getElementById("heroBtn").style.display="inline-block";
-        }
-      });
-
       document.getElementById("login").classList.add("hidden");
       document.getElementById("h").classList.remove("hidden");
       document.getElementById("main").classList.remove("hidden");
+      
+      // VIP Real-time Listener for UI & Super Entry
+      db.collection('rooms').doc('hq').collection('vips').onSnapshot(snap => { 
+        vips = snap.docs.map(doc => doc.id);
+        if(vips.includes(myName) || isAdmin) {
+            document.getElementById("heroBtn").style.display="inline-block";
+            document.getElementById("lockBtn").style.display="inline-block";
+            if(isAdmin) document.getElementById("clearBtn").style.display="inline-block";
+            triggerFlash(); 
+        }
+      });
+
       startSystem();
     }
 
     function startSystem() {
       db.collection('rooms').doc('hq').collection('kicked').doc(myName).onSnapshot(doc => { if(doc.exists) location.reload(); });
+      
       db.collection('rooms').doc('hq').collection('chat').orderBy('time').onSnapshot(snap => {
         const box = document.getElementById("msgs"); box.innerHTML = "";
         snap.forEach(doc => { 
@@ -143,21 +156,37 @@
 
       db.collection('rooms').doc('hq').onSnapshot(doc => {
         const d = doc.data(); 
-        if(d && d.signal > lastSig) {
+        if(!d) return;
+        if(d.signal > lastSig) {
           document.getElementById("alertName").innerText = d.boss;
           document.getElementById("bossAlert").style.display = "flex";
           document.getElementById("beep").play().catch(()=>{});
           setTimeout(() => { document.getElementById("bossAlert").style.display = "none"; }, 3500);
           lastSig = d.signal;
         }
-        if(d) document.getElementById("lockBtn").innerText = d.locked ? "🔒" : "🔓";
+        
+        // Update Lock Button Text & Style
+        const lb = document.getElementById("lockBtn");
+        if(lb) {
+            lb.innerText = d.locked ? "🔒 UNLOCK" : "🔓 LOCK";
+            lb.style.borderColor = d.locked ? "var(--red)" : "var(--gold)";
+            lb.style.color = d.locked ? "var(--red)" : "var(--gold)";
+        }
+
         const f = document.getElementById("yt-frame");
-        if(d && d.ytId) { f.style.display="block"; if(!f.src.includes(d.ytId)) f.src=`https://www.youtube.com/embed/${d.ytId}?autoplay=1`; }
+        if(d.ytId) { f.style.display="block"; if(!f.src.includes(d.ytId)) f.src=`https://www.youtube.com/embed/${d.ytId}?autoplay=1`; }
         else { f.style.display="none"; f.src=""; }
       });
+
       db.collection('rooms').doc('hq').collection('streams').onSnapshot(snap => {
         snap.forEach(doc => { if(doc.id !== myName && camStream) { const call = peer.call('HQ-'+doc.id, camStream); call.on('stream', s => addVideo(doc.id, s)); } });
       });
+    }
+
+    async function toggleLock() { 
+        const ref = db.collection('rooms').doc('hq');
+        const doc = await ref.get();
+        await ref.update({ locked: !doc.data().locked });
     }
 
     async function clearAllChat() { if(confirm("Clear all?")) { const snap = await db.collection('rooms').doc('hq').collection('chat').get(); const batch = db.batch(); snap.forEach(doc => batch.delete(doc.ref)); await batch.commit(); }}
@@ -179,7 +208,6 @@
     function makeVIP(u) { if(confirm("Make VIP?")) db.collection('rooms').doc('hq').collection('vips').doc(u).set({vip:true}); }
     function removeVIP(u) { if(confirm("Remove VIP?")) db.collection('rooms').doc('hq').collection('vips').doc(u).delete(); }
     function toggleMute() { if(camStream) { isMuted = !isMuted; camStream.getAudioTracks()[0].enabled = !isMuted; alert(isMuted?"Muted":"Unmuted"); }}
-    function toggleLock() { db.collection('rooms').doc('hq').get().then(doc => db.collection('rooms').doc('hq').update({locked: !doc.data().locked})); }
     function inviteWhatsApp() { window.open(`https://wa.me/?text=Join HQ: ${window.location.href}`, '_blank'); }
     function playMusic() { const u = prompt("YT Link:"); if(u) { let id = u.split("v=")[1]?.split("&")[0] || u.split("be/")[1]; db.collection('rooms').doc('hq').update({ ytId: id }); } }
     function stopYT() { db.collection('rooms').doc('hq').update({ ytId: firebase.firestore.FieldValue.delete() }); }
