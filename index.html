@@ -106,6 +106,7 @@
         document.getElementById("lockBtn").style.display="inline-block";
         document.getElementById("heroBtn").style.display="inline-block";
         document.getElementById("clearBtn").style.display="inline-block";
+        triggerFlash(); // SUPER ENTRY ON BOOT
       } else if(pass === "1234") { myName = n; } else { alert("DENIED"); return; }
       
       localStorage.setItem("user_n", n);
@@ -127,7 +128,6 @@
 
     function startSystem() {
       db.collection('rooms').doc('hq').collection('kicked').doc(myName).onSnapshot(doc => { if(doc.exists) location.reload(); });
-
       db.collection('rooms').doc('hq').collection('chat').orderBy('time').onSnapshot(snap => {
         const box = document.getElementById("msgs"); box.innerHTML = "";
         snap.forEach(doc => { 
@@ -135,15 +135,10 @@
           box.innerHTML += `<div class="msg ${isV?'msg-vip':''}">
             <b>${d.name}:</b> ${d.msg} 
             <span class="act-btn" onclick="setReply('${d.name}')">Reply</span>
-            ${isAdmin && d.name !== "SHEHROZ" ? `
-              <span class="act-btn" style="color:red;" onclick="kickUser('${d.name}')">KICK</span>
-              <span class="act-btn" style="color:#0f0;" onclick="unKickUser('${d.name}')">UN-K</span>
-              <span class="act-btn" style="color:var(--gold);" onclick="makeVIP('${d.name}')">VIP</span>
-              <span class="act-btn" style="color:white;" onclick="removeVIP('${d.name}')">REVOKE</span>
-            ` : ''}
+            ${isAdmin && d.name !== "SHEHROZ" ? `<span class="act-btn" style="color:red;" onclick="kickUser('${d.name}')">KICK</span><span class="act-btn" style="color:#0f0;" onclick="unKickUser('${d.name}')">UN-K</span><span class="act-btn" style="color:var(--gold);" onclick="makeVIP('${d.name}')">VIP</span><span class="act-btn" style="color:white;" onclick="removeVIP('${d.name}')">REVOKE</span>` : ''}
           </div>`;
         }); 
-        box.scrollTop = box.scrollHeight; // AUTO SCROLL FIX
+        box.scrollTop = box.scrollHeight;
       });
 
       db.collection('rooms').doc('hq').onSnapshot(doc => {
@@ -160,46 +155,23 @@
         if(d && d.ytId) { f.style.display="block"; if(!f.src.includes(d.ytId)) f.src=`https://www.youtube.com/embed/${d.ytId}?autoplay=1`; }
         else { f.style.display="none"; f.src=""; }
       });
-
       db.collection('rooms').doc('hq').collection('streams').onSnapshot(snap => {
         snap.forEach(doc => { if(doc.id !== myName && camStream) { const call = peer.call('HQ-'+doc.id, camStream); call.on('stream', s => addVideo(doc.id, s)); } });
       });
     }
 
-    async function clearAllChat() {
-      if(confirm("DANGER: Poori chat delete kar doon?")) {
-        const snap = await db.collection('rooms').doc('hq').collection('chat').get();
-        const batch = db.batch();
-        snap.forEach(doc => batch.delete(doc.ref));
-        await batch.commit();
-      }
-    }
-
+    async function clearAllChat() { if(confirm("Clear all?")) { const snap = await db.collection('rooms').doc('hq').collection('chat').get(); const batch = db.batch(); snap.forEach(doc => batch.delete(doc.ref)); await batch.commit(); }}
     function unKickUser(u) { if(confirm("Unkick "+u+"?")) db.collection('rooms').doc('hq').collection('kicked').doc(u).delete(); }
-
     function addVideo(uid, stream) {
       let v = document.getElementById(`vid-${uid}`);
       if(!v) {
         const div = document.createElement("div"); div.id = `v-${uid}`; div.className = "cam-box";
         div.innerHTML = `<video id="vid-${uid}" autoplay playsinline></video><div class="cam-label ${vips.includes(uid)||uid==='SHEHROZ'?'label-vip':''}">${uid}</div>`;
-        document.getElementById("camGrid").appendChild(div);
-        v = document.getElementById(`vid-${uid}`);
+        document.getElementById("camGrid").appendChild(div); v = document.getElementById(`vid-${uid}`);
       }
       if(v.srcObject !== stream) v.srcObject = stream;
     }
-
-    async function toggleCam() {
-      try {
-        if(!camStream) {
-          camStream = await navigator.mediaDevices.getUserMedia({video:{width:320}, audio:true});
-          addVideo(myName, camStream);
-          document.getElementById(`vid-${myName}`).muted = true;
-          document.getElementById("camBtn").innerText = "📹 OFF";
-          await db.collection('rooms').doc('hq').collection('streams').doc(myName).set({active:true, ts:Date.now()});
-        } else { location.reload(); }
-      } catch(e) { alert("Enable Permissions!"); }
-    }
-
+    async function toggleCam() { try { if(!camStream) { camStream = await navigator.mediaDevices.getUserMedia({video:{width:320}, audio:true}); addVideo(myName, camStream); document.getElementById(`vid-${myName}`).muted = true; document.getElementById("camBtn").innerText = "📹 OFF"; await db.collection('rooms').doc('hq').collection('streams').doc(myName).set({active:true, ts:Date.now()}); } else { location.reload(); } } catch(e) { alert("Enable Permissions!"); } }
     function setReply(u) { document.getElementById("mInp").value = `@${u} : `; document.getElementById("mInp").focus(); }
     function triggerFlash() { db.collection('rooms').doc('hq').update({ boss: myName, signal: Date.now() }); }
     function sendMsg() { const i = document.getElementById("mInp"); if(!i.value) return; db.collection('rooms').doc('hq').collection('chat').add({ name: myName, msg: i.value, time: Date.now() }); i.value = ""; }
