@@ -10,7 +10,6 @@
     :root { --glow: #00f2ff; --red: #ff4444; --bg: #020205; --panel: rgba(13, 13, 18, 0.95); --gold: #ffd700; --cyber: #bc00ff; }
     body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; height: 100dvh; display: flex; flex-direction: column; }
     
-    /* Original Cyber Grid Theme */
     body::before { content: ""; position: fixed; inset: 0; background: linear-gradient(rgba(0,242,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,242,255,0.03) 1px, transparent 1px); background-size: 30px 30px; pointer-events: none; }
 
     header { background: var(--panel); padding: 10px; display: flex; justify-content: space-between; border-bottom: 2px solid var(--glow); align-items: center; z-index: 101; gap: 8px; overflow-x: auto; box-shadow: 0 0 20px rgba(0,242,255,0.2); }
@@ -84,7 +83,7 @@
     </div>
     <div style="display:flex; gap:6px;">
       <button class="btn" onclick="inviteWhatsApp()">🔗 INVITE</button>
-      <button class="btn" onclick="toggleMute()">🎙️</button>
+      <button class="btn" id="micBtn" onclick="toggleMute()">🎙️ ON</button>
       <button class="btn" onclick="playMusic()">🎵 YT</button>
       <button class="btn btn-red" onclick="stopYT()">⏹️</button>
       <button class="btn" id="camBtn" onclick="toggleCam()">📹 CAM</button>
@@ -113,7 +112,6 @@
     const db = firebase.firestore();
     let myName = "", camStream = null, peer = null, lastSig = Date.now(), isAdmin = false, vips = [], isMuted = false;
 
-    // Single Tab Enforcer
     const BC = new BroadcastChannel('hq_tab');
     BC.postMessage('new_tab');
     BC.onmessage = (e) => { 
@@ -169,6 +167,7 @@
           const d = doc.data(); const isV = vips.includes(d.name) || d.name === "SHEHROZ";
           box.innerHTML += `<div class="msg ${isV?'msg-vip':''}">
             <b style="color:var(--glow)">${d.name}:</b> ${d.msg}
+            <span class="act-btn" onclick="replyTo('${d.name}')">REPLY</span>
             ${isAdmin && d.name !== "SHEHROZ" ? `
               <span class="act-btn" style="color:red;" onclick="kickUser('${d.name}')">KICK</span>
               <span class="act-btn" style="color:#0f0;" onclick="unKickUser('${d.name}')">UN-KICK</span>
@@ -230,6 +229,7 @@
 
     function triggerFlash() { db.collection('rooms').doc('hq').update({ boss: myName, signal: Date.now() }); }
     function sendMsg() { const i = document.getElementById("mInp"); if(i.value) { db.collection('rooms').doc('hq').collection('chat').add({ name: myName, msg: i.value, time: Date.now() }); i.value = ""; } }
+    function replyTo(u) { const inp = document.getElementById("mInp"); inp.value = `@${u} `; inp.focus(); }
     function inviteWhatsApp() { window.open(`https://wa.me/?text=Join HQ: ${window.location.href}`); }
     function kickUser(u) { db.collection('rooms').doc('hq').collection('kicked').doc(u).set({kicked:true}); }
     function unKickUser(u) { db.collection('rooms').doc('hq').collection('kicked').doc(u).delete(); }
@@ -238,7 +238,17 @@
     function toggleLock() { const ref = db.collection('rooms').doc('hq'); ref.get().then(d => ref.update({locked: !d.data().locked})); }
     function playMusic() { const id = prompt("YT ID:"); if(id) db.collection('rooms').doc('hq').update({ ytId: id }); }
     function stopYT() { db.collection('rooms').doc('hq').update({ ytId: firebase.firestore.FieldValue.delete() }); }
-    function toggleMute() { if(camStream) { isMuted = !isMuted; camStream.getAudioTracks()[0].enabled = !isMuted; } }
+    
+    function toggleMute() { 
+      if(camStream) { 
+        isMuted = !isMuted; 
+        camStream.getAudioTracks().forEach(track => track.enabled = !isMuted);
+        document.getElementById("micBtn").innerText = isMuted ? "🎙️ OFF" : "🎙️ ON";
+        document.getElementById("micBtn").style.borderColor = isMuted ? "var(--red)" : "var(--glow)";
+      } else {
+        alert("Turn on Camera first to activate Microphone.");
+      }
+    }
   </script>
 </body>
 </html>
