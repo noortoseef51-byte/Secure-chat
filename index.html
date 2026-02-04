@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>HQ CYBER - ZERO ERROR V4</title>
+  <title>HQ CYBER PRO V4 - FULL ADMIN</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
   <style>
-    :root { --glow: #00f2ff; --red: #ff4444; --bg: #020205; --gold: #ffd700; --cyber: #bc00ff; }
+    :root { --glow: #00f2ff; --red: #ff4444; --bg: #020205; --gold: #ffd700; --cyber: #bc00ff; --green: #00ff88; }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
     body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
 
-    header { background: #000; padding: 8px; border-bottom: 2px solid var(--glow); flex-shrink: 0; z-index: 100; }
-    .header-btns { display: flex; gap: 4px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+    header { background: #000; padding: 10px; border-bottom: 2px solid var(--glow); flex-shrink: 0; z-index: 101; }
+    .header-btns { display: flex; gap: 5px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
     .header-btns::-webkit-scrollbar { display: none; }
     
     .btn { padding: 8px 12px; background: transparent; color: var(--glow); border: 1px solid var(--glow); cursor: pointer; font-size: 9px; font-weight: bold; font-family: 'Orbitron'; text-transform: uppercase; white-space: nowrap; border-radius: 4px; }
@@ -22,18 +22,21 @@
     .main-container { display: flex; flex: 1; flex-direction: column; min-height: 0; overflow: hidden; }
     @media (min-width: 992px) { .main-container { flex-direction: row; } }
 
-    #camGrid { height: 22vh; min-height: 130px; background: rgba(0,0,0,0.5); display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 5px; padding: 8px; overflow-y: auto; flex-shrink: 0; border-bottom: 1px solid var(--glow); }
+    #camGrid { height: 20vh; min-height: 120px; background: rgba(0,0,0,0.5); display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 5px; padding: 8px; overflow-y: auto; flex-shrink: 0; border-bottom: 1px solid var(--glow); }
     @media (min-width: 992px) { #camGrid { height: auto; flex: 1.5; border-bottom: none; border-right: 1px solid var(--glow); } }
     
-    .cam-box { position: relative; background: #000; border: 1px solid #1a1a1f; height: 95px; border-radius: 4px; overflow: hidden; }
+    .cam-box { position: relative; background: #000; border: 1px solid #1a1a1f; height: 90px; border-radius: 4px; overflow: hidden; }
     video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
     .cam-label { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.8); color: var(--glow); font-size: 7px; padding: 2px; font-family: 'Orbitron'; text-align: center; }
 
-    .chat-side { flex: 1; display: flex; flex-direction: column; background: rgba(5,5,10,0.95); min-height: 0; position: relative; }
-    #msgs { flex: 1; overflow-y: auto; padding: 10px; font-size: 11px; padding-bottom: 75px; }
-    .msg-row { margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.02); padding-bottom: 4px; }
-    .user-name { color: var(--glow); font-weight: bold; font-family: 'Orbitron'; }
-    .vip-name { color: var(--gold); text-shadow: 0 0 5px var(--gold); }
+    .chat-side { flex: 1; display: flex; flex-direction: column; background: rgba(5,5,10,0.96); min-height: 0; position: relative; }
+    #msgs { flex: 1; overflow-y: auto; padding: 12px; font-size: 11px; padding-bottom: 75px; }
+    .msg-row { margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 8px; }
+    .user-name { color: var(--glow); font-weight: 900; font-family: 'Orbitron'; }
+    .vip-name { color: var(--gold); text-shadow: 0 0 8px var(--gold); }
+
+    .admin-controls { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+    .ctrl-btn { font-size: 7px; padding: 2px 5px; border: 1px solid #333; background: #000; color: #fff; cursor: pointer; font-family: 'Orbitron'; border-radius: 2px; }
 
     .input-area { position: absolute; bottom: 0; width: 100%; padding: 10px; background: #000; border-top: 1px solid var(--glow); display: flex; gap: 6px; z-index: 10; }
     #mInp { flex: 1; background: #0a0a0f; border: 1px solid #333; color: #fff; padding: 12px; font-family: 'Orbitron'; font-size: 11px; outline: none; border-radius: 4px; }
@@ -55,16 +58,16 @@
 
   <div id="login">
     <div style="background:#0a0a0f; padding:30px; border:1px solid var(--glow); text-align:center; width:90%; max-width:320px; border-radius:12px;">
-      <h2 style="font-family:Orbitron; color:var(--glow); font-size:16px; margin-bottom:20px;">SYSTEM_V4_SECURE</h2>
+      <h2 style="font-family:Orbitron; color:var(--glow); font-size:15px; margin-bottom:20px;">SYSTEM_V4_SECURE</h2>
       <input type="text" id="u" placeholder="NICKNAME" style="width:100%; padding:14px; margin-bottom:12px; background:#000; color:white; border:1px solid #333; font-family:Orbitron;">
-      <input type="password" id="p" placeholder="PASSWORD" style="width:100%; padding:14px; margin-bottom:20px; background:#000; color:white; border:1px solid #333; font-family:Orbitron;">
-      <button class="btn" style="width:100%; padding:15px;" onclick="connect()">BOOT SYSTEM</button>
+      <input type="password" id="p" placeholder="CODE" style="width:100%; padding:14px; margin-bottom:20px; background:#000; color:white; border:1px solid #333; font-family:Orbitron;">
+      <button class="btn" style="width:100%; padding:15px;" onclick="connect()">INITIALIZE</button>
     </div>
   </div>
 
   <header id="h" class="hidden">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-      <div id="status" style="color:var(--glow); font-family:Orbitron; font-size:9px; border:1px solid var(--glow); padding:2px 10px;">SECURE CONNECTION</div>
+      <div id="status" style="color:var(--glow); font-family:Orbitron; font-size:9px; border:1px solid var(--glow); padding:2px 10px;">HQ_TERMINAL_V4</div>
       <button class="btn btn-hero" id="heroBtn" style="display:none;" onclick="triggerHero()">⚡ SUPER FLASH</button>
     </div>
     <div class="header-btns">
@@ -83,7 +86,7 @@
       <iframe id="yt-frame" style="width:100%; height:80px; display:none; border:none;" src="" allow="autoplay"></iframe>
       <div id="msgs"></div>
       <div class="input-area">
-        <input type="text" id="mInp" placeholder="ENTER COMMAND..." onkeypress="if(event.key==='Enter') sendMsg()">
+        <input type="text" id="mInp" placeholder="TYPE MESSAGE..." onkeypress="if(event.key==='Enter') sendMsg()">
         <button class="btn" onclick="sendMsg()">SEND</button>
       </div>
     </div>
@@ -95,18 +98,18 @@
     const firebaseConfig = { apiKey: "AIzaSyA806HxxZejS_l5_pWAb9cJ0pbbhNhgR8A", authDomain: "call-2b58d.firebaseapp.com", projectId: "call-2b58d", appId: "1:693359105489:web:6802540c272a565d27bcf0" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-    let myName = "", camStream = null, peer = null, isSuperPass = false, vips = [], loginTime = Date.now(), lastSig = Date.now();
+    let myName = "", camStream = null, peer = null, isSuperUser = false, vips = [], loginTime = Date.now(), lastSig = Date.now();
 
     function checkPrev() { if(localStorage.getItem("user_n")) document.getElementById("u").value = localStorage.getItem("user_n"); }
 
     async function connect() {
       const user = document.getElementById("u").value.trim().toUpperCase();
       const pass = document.getElementById("p").value;
-      if(user === "") return alert("Enter Nickname");
+      if(user === "") return;
 
-      if(pass === "1661@786") { isSuperPass = true; } 
-      else if(pass === "1234") { isSuperPass = false; } 
-      else { alert("INVALID PASSWORD"); return; }
+      if(pass === "1661@786") { isSuperUser = true; } 
+      else if(pass === "1234") { isSuperUser = false; } 
+      else { alert("ACCESS DENIED"); return; }
 
       myName = user;
       loginTime = Date.now();
@@ -125,36 +128,40 @@
     }
 
     function initSystem() {
-      // 1. VIP List & Self Alert Trigger
       db.collection('rooms').doc('hq').collection('vips').onSnapshot(snap => {
         vips = snap.docs.map(d => d.id);
-        if(isSuperPass || vips.includes(myName)) {
+        if(isSuperUser || vips.includes(myName)) {
           document.getElementById("heroBtn").style.display = "block";
-          document.getElementById("status").innerText = "SUPER_USER ACTIVE";
-          // Only trigger alert ONCE upon login
           if(Date.now() - loginTime < 3000) triggerHero();
-        } else {
-          document.getElementById("status").innerText = "NORMAL_USER";
         }
       });
 
-      // 2. Chat Logic
       db.collection('rooms').doc('hq').collection('chat').orderBy('time').onSnapshot(snap => {
         const box = document.getElementById("msgs"); box.innerHTML = "";
         snap.forEach(doc => {
           const d = doc.data();
           const isV = vips.includes(d.name) || d.name === "SHEHROZ";
-          box.innerHTML += `<div class="msg-row"><span class="user-name ${isV?'vip-name':''}">${d.name}:</span> ${d.msg}</div>`;
+          box.innerHTML += `<div class="msg-row">
+            <div><span class="user-name ${isV?'vip-name':''}">${d.name}:</span> ${d.msg}</div>
+            <div class="admin-controls">
+              <span class="ctrl-btn" onclick="reply('${d.name}')">REPLY</span>
+              ${isSuperUser ? `
+                <span class="ctrl-btn" style="color:var(--gold)" onclick="makeV('${d.name}')">VIP</span>
+                <span class="ctrl-btn" onclick="revV('${d.name}')">REVOKE</span>
+                <span class="ctrl-btn" style="color:var(--red)" onclick="kick('${d.name}')">KICK</span>
+                <span class="ctrl-btn" style="color:var(--green)" onclick="unkick('${d.name}')">UNKICK</span>
+                <span class="ctrl-btn" style="color:var(--red)" onclick="del('${doc.id}')">DEL</span>
+              ` : ''}
+            </div>
+          </div>`;
         });
         box.scrollTop = box.scrollHeight;
       });
 
-      // 3. STRICT ALERT MONITOR
       db.collection('rooms').doc('hq').onSnapshot(doc => {
         const d = doc.data();
         if(d && d.sig > lastSig) {
-          // Alert only if the person who triggered it is Shehroz OR a VIP
-          if(d.boss === "SHEHROZ" || vips.includes(d.boss) || d.isSuper) {
+          if(vips.includes(d.boss) || d.isSuper) {
             document.getElementById("alertName").innerText = d.boss;
             document.getElementById("bossAlert").style.display = "flex";
             document.getElementById("beep").play().catch(()=>{});
@@ -169,13 +176,13 @@
       });
     }
 
-    function triggerHero() { 
-      db.collection('rooms').doc('hq').update({ 
-        boss: myName, 
-        sig: Date.now(),
-        isSuper: isSuperPass
-      }); 
-    }
+    function triggerHero() { db.collection('rooms').doc('hq').update({ boss: myName, sig: Date.now(), isSuper: isSuperUser }); }
+    function del(id) { db.collection('rooms').doc('hq').collection('chat').doc(id).delete(); }
+    function kick(u) { db.collection('rooms').doc('hq').collection('kicked').doc(u).set({k:true}); }
+    function unkick(u) { db.collection('rooms').doc('hq').collection('kicked').doc(u).delete(); }
+    function makeV(u) { db.collection('rooms').doc('hq').collection('vips').doc(u).set({v:true}); }
+    function revV(u) { db.collection('rooms').doc('hq').collection('vips').doc(u).delete(); }
+    function reply(u) { const i = document.getElementById("mInp"); i.value = `@${u} : `; i.focus(); }
 
     async function toggleCam() {
       if(!camStream) {
@@ -205,7 +212,7 @@
     function stopYT() { db.collection('rooms').doc('hq').update({ ytId: null }); }
     function playMusic() { const id = prompt("YT ID:"); if(id) db.collection('rooms').doc('hq').update({ ytId: id }); }
     function toggleMic() { if(camStream) { let t = camStream.getAudioTracks()[0]; t.enabled = !t.enabled; document.getElementById("micBtn").innerText = t.enabled ? "🎙️ ON" : "🎙️ OFF"; } }
-    function invite() { window.open(`https://wa.me/?text=Join HQ Terminal: ${window.location.href}`); }
+    function invite() { window.open(`https://wa.me/?text=Join HQ: ${window.location.href}`); }
   </script>
 </body>
 </html>
