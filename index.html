@@ -3,49 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>HQ CYBER PRO V4 - FULL CONTROL</title>
+  <title>HQ CYBER PRO V4 - UNIVERSAL</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
   <style>
     :root { --glow: #00f2ff; --red: #ff4444; --bg: #020205; --panel: rgba(13, 13, 18, 0.95); --gold: #ffd700; --cyber: #bc00ff; --green: #0f0; }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
-    body::before { content: ""; position: fixed; inset: 0; background: linear-gradient(rgba(0,242,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,242,255,0.05) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; z-index: -1; }
+    
+    /* Responsive Background Grid */
+    body::before { content: ""; position: fixed; inset: 0; background: linear-gradient(rgba(0,242,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,242,255,0.05) 1px, transparent 1px); background-size: 30px 30px; pointer-events: none; z-index: -1; }
 
     header { background: #000; padding: 10px; border-bottom: 2px solid var(--glow); z-index: 101; flex-shrink: 0; }
-    .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
     .header-btns { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+    .header-btns::-webkit-scrollbar { display: none; }
     
-    .btn { padding: 6px 12px; background: transparent; color: var(--glow); border: 1px solid var(--glow); cursor: pointer; font-size: 10px; font-weight: bold; font-family: 'Orbitron'; text-transform: uppercase; transition: 0.2s; white-space: nowrap; }
+    .btn { padding: 8px 14px; background: transparent; color: var(--glow); border: 1px solid var(--glow); cursor: pointer; font-size: 10px; font-weight: bold; font-family: 'Orbitron'; text-transform: uppercase; white-space: nowrap; transition: 0.3s; }
+    .btn:hover { background: var(--glow); color: #000; }
     .btn-hero { background: var(--cyber); color: white; border-color: var(--cyber); }
     .btn-red { color: var(--red); border-color: var(--red); }
-    .online-badge { border: 1px solid var(--glow); color: var(--glow); padding: 4px 10px; font-family: 'Orbitron'; font-size: 10px; }
 
-    .main-container { display: flex; flex: 1; overflow: hidden; flex-direction: column; }
-    @media (min-width: 768px) { .main-container { flex-direction: row; } }
+    /* RESPONSIVE MAIN LAYOUT */
+    .main-container { display: flex; flex: 1; overflow: hidden; flex-direction: column; } /* Default Mobile */
+    @media (min-width: 992px) { .main-container { flex-direction: row; } } /* Laptop/Desktop */
 
-    #camGrid { flex: 1.5; background: rgba(0,0,0,0.4); display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; padding: 15px; overflow-y: auto; }
-    .cam-box { position: relative; background: #000; border: 1px solid #1a1a1f; border-radius: 2px; height: 140px; }
+    /* CAM AREA */
+    #camGrid { flex: 1.2; background: rgba(0,0,0,0.6); display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; padding: 15px; overflow-y: auto; border-bottom: 1px solid var(--glow); }
+    @media (min-width: 992px) { #camGrid { border-bottom: none; border-right: 1px solid var(--glow); } }
+    
+    .cam-box { position: relative; background: #000; border: 1px solid #1a1a1f; height: 140px; border-radius: 4px; overflow: hidden; }
     video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
-    .cam-label { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); color: var(--glow); font-size: 9px; padding: 4px; font-family: 'Orbitron'; text-align: center; border-top: 1px solid var(--glow); }
+    .cam-label { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.8); color: var(--glow); font-size: 9px; padding: 5px; font-family: 'Orbitron'; text-align: center; border-top: 1px solid var(--glow); }
 
-    .chat-side { flex: 1; display: flex; flex-direction: column; background: rgba(0,0,0,0.8); border-left: 2px solid var(--glow); }
-    #msgs { flex: 1; overflow-y: auto; padding: 10px; font-size: 12px; }
-    .msg-row { margin-bottom: 15px; padding: 5px; border-bottom: 1px solid rgba(255,255,255,0.05); position: relative; }
+    /* CHAT AREA */
+    .chat-side { flex: 1; display: flex; flex-direction: column; background: rgba(0,0,0,0.8); position: relative; }
+    #msgs { flex: 1; overflow-y: auto; padding: 15px; font-size: 12px; padding-bottom: 80px; }
+    .msg-row { margin-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px; }
     .user-name { color: var(--glow); font-weight: 900; font-family: 'Orbitron'; }
-    .vip-name { color: var(--gold); }
+    .vip-name { color: var(--gold); text-shadow: 0 0 8px var(--gold); }
 
-    .admin-controls { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 5px; justify-content: flex-end; }
-    .ctrl-btn { font-size: 7px; padding: 3px 6px; border: 1px solid #444; background: #000; color: #fff; cursor: pointer; font-family: 'Orbitron'; text-transform: uppercase; }
-    .btn-kick { color: var(--red); border-color: var(--red); }
-    .btn-vip { color: var(--gold); border-color: var(--gold); }
-    .btn-unkick { color: var(--green); border-color: var(--green); }
-    .btn-reply { color: var(--glow); border-color: var(--glow); }
+    /* ADMIN BUTTONS */
+    .admin-controls { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
+    .ctrl-btn { font-size: 8px; padding: 3px 8px; border: 1px solid #444; background: #000; color: #fff; cursor: pointer; font-family: 'Orbitron'; transition: 0.2s; }
+    .ctrl-btn:hover { border-color: white; }
 
-    .input-area { padding: 15px; background: #000; border-top: 2px solid var(--glow); display: flex; gap: 10px; }
-    #mInp { flex: 1; background: #000; border: 1px solid #333; color: #fff; padding: 12px; font-family: 'Orbitron'; font-size: 12px; }
+    .input-area { position: absolute; bottom: 0; width: 100%; padding: 15px; background: #050505; border-top: 2px solid var(--glow); display: flex; gap: 10px; z-index: 10; }
+    #mInp { flex: 1; background: #000; border: 1px solid #333; color: #fff; padding: 12px; font-family: 'Orbitron'; font-size: 12px; outline: none; border-radius: 4px; }
+    #mInp:focus { border-color: var(--glow); }
 
-    #bossAlert { position: fixed; inset: 0; z-index: 99999; display: none; justify-content: center; align-items: center; background: rgba(0,0,0,0.9); border: 4px solid var(--gold); }
+    /* SUPER ENTRY */
+    #bossAlert { position: fixed; inset: 0; z-index: 99999; display: none; justify-content: center; align-items: center; background: rgba(0,0,0,0.95); border: 5px solid var(--gold); }
+    
     #login { position: fixed; inset: 0; z-index: 100000; background: #000; display: flex; justify-content: center; align-items: center; }
     .hidden { display: none !important; }
   </style>
@@ -53,28 +62,33 @@
 <body onload="checkPrev()">
 
   <audio id="beep" src="https://www.soundjay.com/buttons/beep-01a.mp3"></audio>
-  <div id="bossAlert"><div style="text-align:center; font-family:Orbitron; color:var(--gold);"><h1 id="alertName" style="font-size:40px; margin:0;">ADMIN</h1><p>SYSTEM AUTHORIZED ACCESS</p></div></div>
+  <div id="bossAlert">
+    <div style="text-align:center; font-family:Orbitron; color:var(--gold);">
+      <h1 id="alertName" style="font-size: clamp(30px, 10vw, 60px); margin:0;">ADMIN</h1>
+      <p style="letter-spacing: 5px; font-size: 14px;">AUTHORIZED ENTRY</p>
+    </div>
+  </div>
 
   <div id="login">
-    <div style="background:#0a0a0f; padding:40px; border:1px solid var(--glow); text-align:center; width:90%; max-width:320px;">
-      <h2 style="font-family:Orbitron; color:var(--glow);">TERMINAL_LOGIN</h2>
-      <input type="text" id="u" placeholder="IDENTITY" style="width:100%; padding:15px; margin:15px 0; background:#000; color:white; border:1px solid #333;">
-      <input type="password" id="p" placeholder="CODE" style="width:100%; padding:15px; margin-bottom:15px; background:#000; color:white; border:1px solid #333;">
-      <button class="btn" style="width:100%; padding:15px;" onclick="connect()">BOOT SYSTEM</button>
+    <div style="background:#0a0a0f; padding:40px; border:1px solid var(--glow); text-align:center; width:90%; max-width:350px; border-radius:8px;">
+      <h2 style="font-family:Orbitron; color:var(--glow); margin-bottom:20px;">SYSTEM_AUTH_V4</h2>
+      <input type="text" id="u" placeholder="IDENTITY" style="width:100%; padding:15px; margin-bottom:15px; background:#000; color:white; border:1px solid #333; font-family:Orbitron; border-radius:4px;">
+      <input type="password" id="p" placeholder="ACCESS CODE" style="width:100%; padding:15px; margin-bottom:20px; background:#000; color:white; border:1px solid #333; font-family:Orbitron; border-radius:4px;">
+      <button class="btn" style="width:100%; padding:15px; font-size:14px;" onclick="connect()">BOOT SYSTEM</button>
     </div>
   </div>
 
   <header id="h" class="hidden">
     <div class="header-top">
-      <div class="online-badge">ONLINE: <span id="count">1</span></div>
-      <button class="btn btn-hero" id="heroBtn" style="display:none;" onclick="triggerHero()">⚡ HERO</button>
+      <div style="border:1px solid var(--glow); padding:5px 12px; font-family:Orbitron; font-size:11px; color:var(--glow);">HQ ONLINE</div>
+      <button class="btn btn-hero" id="heroBtn" style="display:none;" onclick="triggerHero()">⚡ HERO ENTRY</button>
     </div>
     <div class="header-btns">
-      <button class="btn" onclick="invite()">🔗 INVITE</button>
-      <button class="btn" id="micBtn" onclick="toggleMic()">🎙️ ON</button>
-      <button class="btn" onclick="playMusic()">🎵 YT</button>
+      <button class="btn" id="camBtn" onclick="toggleCam()">📹 CAMERA</button>
+      <button class="btn" id="micBtn" onclick="toggleMic()">🎙️ MIC ON</button>
+      <button class="btn" onclick="playMusic()">🎵 YT PLAY</button>
       <button class="btn btn-red" onclick="stopYT()">⏹️ STOP</button>
-      <button class="btn" id="camBtn" onclick="toggleCam()">📹 CAM</button>
+      <button class="btn" onclick="invite()">🔗 INVITE</button>
       <button class="btn btn-red" onclick="location.reload()">EXIT</button>
     </div>
   </header>
@@ -82,11 +96,11 @@
   <div id="main" class="main-container hidden">
     <div id="camGrid"></div>
     <div class="chat-side">
-      <iframe id="yt-frame" style="width:100%; height:100px; display:none; border:none;" src="" allow="autoplay"></iframe>
+      <iframe id="yt-frame" style="width:100%; height:120px; display:none; border:none;" src="" allow="autoplay"></iframe>
       <div id="msgs"></div>
       <div class="input-area">
-        <input type="text" id="mInp" placeholder="SEND MESSAGE..." onkeypress="if(event.key==='Enter') sendMsg()">
-        <button class="btn" onclick="sendMsg()">SEND</button>
+        <input type="text" id="mInp" placeholder="TYPE MESSAGE..." onkeypress="if(event.key==='Enter') sendMsg()">
+        <button class="btn" style="padding:0 25px;" onclick="sendMsg()">SEND</button>
       </div>
     </div>
   </div>
@@ -105,47 +119,59 @@
       const user = document.getElementById("u").value.trim().toUpperCase();
       const pass = document.getElementById("p").value;
       if(user === "ADMIN" && pass === "1661@786") { myName = "SHEHROZ"; isAdmin = true; }
-      else if(pass === "1234") { myName = user; } else { alert("DENIED"); return; }
+      else if(pass === "1234") { myName = user; } else { alert("ACCESS DENIED"); return; }
+      
       localStorage.setItem("user_n", user);
       peer = new Peer('HQ-' + myName);
       peer.on('call', call => { call.answer(camStream); call.on('stream', s => addVideo(call.peer.replace('HQ-',''), s)); });
+      
       document.getElementById("login").classList.add("hidden");
       document.getElementById("h").classList.remove("hidden");
       document.getElementById("main").classList.remove("hidden");
+      
       db.collection('rooms').doc('hq').collection('users').doc(myName).set({ active: true, time: Date.now() });
-      if(isAdmin) { document.getElementById("heroBtn").style.display="block"; triggerHero(); }
       initSystem();
     }
 
     function initSystem() {
-      db.collection('rooms').doc('hq').collection('vips').onSnapshot(s => { vips = s.docs.map(d => d.id); });
+      db.collection('rooms').doc('hq').collection('vips').onSnapshot(s => { 
+        vips = s.docs.map(d => d.id);
+        if(isAdmin || vips.includes(myName)) {
+          document.getElementById("heroBtn").style.display = "block";
+          if(isAdmin) triggerHero();
+        }
+      });
+
       db.collection('rooms').doc('hq').collection('chat').orderBy('time').onSnapshot(snap => {
         const box = document.getElementById("msgs"); box.innerHTML = "";
         snap.forEach(doc => {
           const d = doc.data();
           const isV = vips.includes(d.name) || d.name === "SHEHROZ";
           box.innerHTML += `<div class="msg-row">
-            <div class="msg-header"><span class="user-name ${isV?'vip-name':''}">${d.name} to:</span> <span class="msg-text">${d.msg}</span></div>
+            <div><span class="user-name ${isV?'vip-name':''}">${d.name} to:</span> ${d.msg}</div>
             <div class="admin-controls">
-              <span class="ctrl-btn btn-reply" onclick="reply('${d.name}')">REPLY</span>
+              <span class="ctrl-btn" style="color:var(--glow)" onclick="reply('${d.name}')">REPLY</span>
               ${isAdmin ? `
-                <span class="ctrl-btn" style="color:white" onclick="revV('${d.name}')">REVOKE</span>
-                <span class="ctrl-btn btn-vip" onclick="makeV('${d.name}')">VIP</span>
-                <span class="ctrl-btn btn-unkick" onclick="unkick('${d.name}')">UN-KICK</span>
-                <span class="ctrl-btn btn-kick" onclick="kick('${d.name}')">KICK</span>
-                <span class="ctrl-btn" style="color:red" onclick="del('${doc.id}')">DEL</span>
+                <span class="ctrl-btn" style="color:white" onclick="revV('${d.name}')">REVOKE VIP</span>
+                <span class="ctrl-btn" style="color:var(--gold)" onclick="makeV('${d.name}')">MAKE VIP</span>
+                <span class="ctrl-btn" style="color:var(--green)" onclick="unkick('${d.name}')">UN-KICK</span>
+                <span class="ctrl-btn" style="color:var(--red)" onclick="kick('${d.name}')">KICK</span>
+                <span class="ctrl-btn" style="color:var(--red)" onclick="del('${doc.id}')">DELETE</span>
               `:''}
             </div></div>`;
         });
         box.scrollTop = box.scrollHeight;
       });
+
       db.collection('rooms').doc('hq').onSnapshot(doc => {
         const d = doc.data();
         if(d && d.sig > lastSig) {
-          document.getElementById("alertName").innerText = d.boss;
-          document.getElementById("bossAlert").style.display = "flex";
-          document.getElementById("beep").play().catch(()=>{});
-          setTimeout(() => document.getElementById("bossAlert").style.display = "none", 4000);
+          if(d.boss === "SHEHROZ" || vips.includes(d.boss)) {
+            document.getElementById("alertName").innerText = d.boss;
+            document.getElementById("bossAlert").style.display = "flex";
+            document.getElementById("beep").play().catch(()=>{});
+            setTimeout(() => document.getElementById("bossAlert").style.display = "none", 4000);
+          }
           lastSig = d.sig;
         }
         if(d && d.ytId) {
@@ -161,11 +187,11 @@
         addVideo(myName, camStream);
         const all = await db.collection('rooms').doc('hq').collection('users').get();
         all.forEach(u => { if(u.id !== myName) peer.call('HQ-'+u.id, camStream); });
-        document.getElementById("camBtn").innerText = "📹 STOP";
+        document.getElementById("camBtn").innerText = "📹 STOP CAM";
       } else {
         camStream.getTracks().forEach(t => t.stop()); camStream = null;
         document.getElementById(`v-${myName}`)?.remove();
-        document.getElementById("camBtn").innerText = "📹 CAM";
+        document.getElementById("camBtn").innerText = "📹 CAMERA";
       }
     }
 
@@ -182,15 +208,15 @@
     function sendMsg() { const i = document.getElementById("mInp"); if(i.value) { db.collection('rooms').doc('hq').collection('chat').add({name:myName, msg:i.value, time:Date.now()}); i.value=""; } }
     function triggerHero() { db.collection('rooms').doc('hq').update({ boss: myName, sig: Date.now() }); }
     function stopYT() { db.collection('rooms').doc('hq').update({ ytId: null }); }
-    function playMusic() { const id = prompt("YT ID:"); if(id) db.collection('rooms').doc('hq').update({ ytId: id }); }
+    function playMusic() { const id = prompt("ENTER YOUTUBE VIDEO ID:"); if(id) db.collection('rooms').doc('hq').update({ ytId: id }); }
     function del(id) { db.collection('rooms').doc('hq').collection('chat').doc(id).delete(); }
     function kick(u) { db.collection('rooms').doc('hq').collection('kicked').doc(u).set({kicked:true}); }
     function unkick(u) { db.collection('rooms').doc('hq').collection('kicked').doc(u).delete(); }
     function makeV(u) { db.collection('rooms').doc('hq').collection('vips').doc(u).set({v:true}); }
     function revV(u) { db.collection('rooms').doc('hq').collection('vips').doc(u).delete(); }
     function reply(u) { const i = document.getElementById("mInp"); i.value = `@${u} : `; i.focus(); }
-    function invite() { window.open(`https://wa.me/?text=Join HQ: ${window.location.href}`); }
-    function toggleMic() { if(camStream) { let t = camStream.getAudioTracks()[0]; t.enabled = !t.enabled; document.getElementById("micBtn").innerText = t.enabled ? "🎙️ ON" : "🎙️ OFF"; } }
+    function invite() { window.open(`https://wa.me/?text=JOIN HQ TERMINAL: ${window.location.href}`); }
+    function toggleMic() { if(camStream) { let t = camStream.getAudioTracks()[0]; t.enabled = !t.enabled; document.getElementById("micBtn").innerText = t.enabled ? "🎙️ MIC ON" : "🎙️ MIC OFF"; } }
   </script>
 </body>
 </html>
