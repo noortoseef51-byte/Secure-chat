@@ -3,38 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>HQ CYBER PRO V12.4 - BOSS ENTRY</title>
+  <title>HQ CYBER PRO V12.8 - FINAL</title>
+  
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  
   <style>
     :root { --glow: #00f2ff; --bg: #050508; --gold: #ffd700; --red: #ff0000; --green: #00ff88; }
     * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
-    body { background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
-
-    /* --- SUPER ENTRY STYLE --- */
-    #superEntry { position: fixed; inset: 0; background: #000; z-index: 50000; display: none; align-items: center; justify-content: center; border: 15px solid var(--red); }
-    .entry-text { color: var(--red); font-family: 'Orbitron'; font-size: 35px; text-align: center; animation: shake 0.1s infinite; text-shadow: 0 0 15px var(--red); }
-    @keyframes shake { 0% { transform: translate(2px, 2px); } 50% { transform: translate(-2px, -2px); } 100% { transform: translate(0); } }
-
-    header { background: #000; padding: 10px; border-bottom: 2px solid var(--glow); z-index: 1000; }
-    .nav-container { display: flex; gap: 10px; justify-content: space-around; padding: 5px; }
-    .master-icon { font-size: 24px; cursor: pointer; background: none; border: none; }
-
-    #left-side { display: flex; gap: 10px; padding: 10px; overflow-x: auto; background: #000; border-bottom: 1px solid #222; min-height: 125px; }
-    .vid-box { width: 140px; height: 105px; border: 2px solid var(--glow); border-radius: 5px; position: relative; flex-shrink: 0; }
-    video { width: 100%; height: 100%; object-fit: cover; }
-    .vid-label { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.7); font-size: 10px; text-align: center; color: var(--glow); }
-
-    #msgs { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; scroll-behavior: smooth; }
-    .msg-box { padding: 10px; border-radius: 6px; background: rgba(255,255,255,0.05); border-left: 4px solid var(--glow); }
-
-    .mgmt-box { display: none; position: fixed; background: #0d0d0d; border: 2px solid var(--gold); padding: 10px; border-radius: 10px; z-index: 10000; width: 200px; box-shadow: 0 0 20px rgba(255,0,0,0.5); }
-    .mgmt-box button { width: 100%; padding: 12px; margin-bottom: 6px; background: #1a1a1a; border: 1px solid #333; color: white; cursor: pointer; text-align: left; font-size: 11px; font-family: 'Orbitron'; border-radius: 5px; }
     
-    #login { position: fixed; inset: 0; background: #000; z-index: 30000; display: flex; align-items: center; justify-content: center; }
+    html, body { height: 100%; width: 100%; overflow: hidden; background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; }
+    body { display: flex; flex-direction: column; }
+
+    /* Super Entry Overlay */
+    #superEntry { position: fixed; inset: 0; background: #000; z-index: 50000; display: none; align-items: center; justify-content: center; border: 15px solid var(--red); }
+    .entry-text { color: var(--red); font-family: 'Orbitron'; font-size: 30px; text-align: center; animation: shake 0.1s infinite; text-shadow: 0 0 20px var(--red); }
+    @keyframes shake { 0% { transform: translate(3px, 3px); } 50% { transform: translate(-3px, -3px); } 100% { transform: translate(0); } }
+
+    header { background: #000; padding: 12px; border-bottom: 2px solid var(--glow); flex-shrink: 0; z-index: 1000; }
+    .nav-container { display: flex; justify-content: space-around; }
+    .master-icon { font-size: 26px; cursor: pointer; background: none; border: none; filter: drop-shadow(0 0 5px var(--glow)); }
+
+    #main-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+    /* Camera Section */
+    #left-side { display: flex; gap: 10px; padding: 10px; overflow-x: auto; background: #000; border-bottom: 1px solid #222; min-height: 125px; flex-shrink: 0; scrollbar-width: none; }
+    .vid-box { width: 140px; height: 105px; border: 2px solid var(--glow); border-radius: 8px; position: relative; flex-shrink: 0; overflow: hidden; background: #111; }
+    video { width: 100%; height: 100%; object-fit: cover; }
+    .vid-label { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.7); font-size: 10px; text-align: center; color: var(--glow); padding: 2px 0; }
+
+    /* Input Section */
+    #input-section { background: #0a0a0a; padding: 10px; display: flex; gap: 8px; flex-shrink: 0; border-bottom: 1px solid #333; }
+    #mInp { flex: 1; background: #111; border: 1px solid #444; color: white; padding: 12px; border-radius: 8px; font-size: 14px; }
+    .send-btn { background: var(--glow); border: none; padding: 0 20px; border-radius: 8px; font-weight: bold; color: #000; cursor: pointer; }
+
+    /* Chat Messages - Scroll Fixed */
+    #msgs { flex: 1; overflow-y: auto !important; -webkit-overflow-scrolling: touch; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+    .msg-box { padding: 12px; border-radius: 8px; background: rgba(255,255,255,0.05); border-left: 4px solid var(--glow); flex-shrink: 0; word-break: break-all; animation: slideIn 0.2s ease-out; }
+    @keyframes slideIn { from { transform: translateX(-10px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+    #yt-container { display:none; width:100%; aspect-ratio:16/9; background:#000; flex-shrink: 0; border-bottom: 2px solid var(--red); }
+
+    /* Floating Menus */
+    .mgmt-box { display: none; position: fixed; background: #0d0d0d; border: 2px solid var(--gold); padding: 12px; border-radius: 12px; z-index: 10000; width: 220px; box-shadow: 0 0 30px rgba(0,0,0,1); }
+    .mgmt-box button { width: 100%; padding: 12px; margin-bottom: 8px; background: #1a1a1a; border: 1px solid #333; color: white; cursor: pointer; text-align: left; font-size: 12px; font-family: 'Orbitron'; border-radius: 6px; }
+    .mgmt-box button:active { background: #333; }
+
+    /* Login Screen */
+    #login { position: fixed; inset: 0; background: #000; z-index: 30000; display: flex; align-items: center; justify-content: center; background-image: radial-gradient(circle, #111 0%, #000 100%); }
     .hidden { display: none !important; }
+    .selector-item { padding: 14px; border-bottom: 1px solid #222; cursor: pointer; color: var(--glow); font-weight: bold; }
   </style>
 </head>
 <body onclick="closeAllMenus()">
@@ -42,15 +62,15 @@
   <audio id="alertSound" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg"></audio>
 
   <div id="superEntry">
-    <div class="entry-text">SYSTEM BREACHED<br>BOSS IS HERE!</div>
+    <div class="entry-text">SYSTEM OVERRIDE<br>BOSS DETECTED!</div>
   </div>
 
   <div id="login">
     <div style="width: 85%; max-width: 320px; text-align: center;">
-      <h1 style="font-family:Orbitron; color:var(--glow); margin-bottom:20px;">CYBER PRO V12.4</h1>
-      <input type="text" id="u" placeholder="NICKNAME" style="width:100%; padding:14px; margin-bottom:12px; background:#111; color:white; border:1px solid #333; border-radius:8px;">
-      <input type="password" id="p" placeholder="CODE" style="width:100%; padding:14px; margin-bottom:20px; background:#111; color:white; border:1px solid #333; border-radius:8px;">
-      <button onclick="connect()" style="width:100%; padding:15px; background:var(--glow); border:none; border-radius:8px; font-family:Orbitron; cursor:pointer; color:black; font-weight:bold;">BOOT SYSTEM</button>
+      <h1 style="font-family:Orbitron; color:var(--glow); margin-bottom:25px; letter-spacing: 2px;">CYBER PRO V12.8</h1>
+      <input type="text" id="u" placeholder="NICKNAME" style="width:100%; padding:15px; margin-bottom:15px; background:#111; color:white; border:1px solid #333; border-radius:10px;">
+      <input type="password" id="p" placeholder="ACCESS CODE" style="width:100%; padding:15px; margin-bottom:25px; background:#111; color:white; border:1px solid #333; border-radius:10px;">
+      <button onclick="connect()" style="width:100%; padding:16px; background:var(--glow); border:none; border-radius:10px; font-family:Orbitron; font-weight:bold; cursor:pointer; box-shadow: 0 0 15px var(--glow);">INITIALIZE</button>
     </div>
   </div>
 
@@ -65,12 +85,12 @@
   </header>
 
   <div id="main-container" class="hidden">
-    <div id="input-section" style="background:#0a0a0a; padding:10px; display:flex; gap:8px;">
-      <input type="text" id="mInp" placeholder="Message..." onkeypress="if(event.key==='Enter') sendMsg()" style="flex:1; background:#111; border:1px solid #444; color:white; padding:12px; border-radius:8px;">
-      <button onclick="sendMsg()" style="background:var(--glow); border:none; padding:10px 15px; border-radius:5px; font-weight:bold;">SEND</button>
-    </div>
     <div id="left-side"></div>
-    <div id="yt-container" style="display:none; width:100%; aspect-ratio:16/9;"></div>
+    <div id="yt-container"></div>
+    <div id="input-section">
+      <input type="text" id="mInp" placeholder="Execute command..." onkeypress="if(event.key==='Enter') sendMsg()">
+      <button onclick="sendMsg()" class="send-btn">SEND</button>
+    </div>
     <div id="msgs"></div>
   </div>
 
@@ -79,38 +99,39 @@
     <button onclick="openSelector('UNKICK')" style="color:var(--green);">🔓 UNKICK USER</button>
     <button onclick="openSelector('VIP')" style="color:var(--gold);">💎 GIVE VIP</button>
     <button onclick="openSelector('REVOKE')">🟠 REVOKE VIP</button>
-    <button onclick="delAllChat()" style="color:var(--red);">🔥 WIPE CHAT</button>
+    <button onclick="delAllChat()" style="color:var(--red); border-top:1px solid #444; margin-top:5px;">🔥 WIPE ALL DATA</button>
   </div>
 
   <div id="mediaMenu" class="mgmt-box">
-    <button onclick="startCam()">📹 LIVE CAM ON</button>
-    <button onclick="stopCam()">🚫 STOP CAM</button>
+    <button onclick="startCam()">📹 START LIVE CAM</button>
+    <button onclick="stopCam()">🚫 STOP STREAM</button>
     <button onclick="toggleMic()" style="color:var(--green);">🎙️ MIC TOGGLE</button>
-    <button onclick="startYt()">📺 YT START</button>
-    <button onclick="stopYt()">⏹️ YT STOP</button>
+    <button onclick="startYt()" style="border-top:1px solid #333;">📺 START YOUTUBE</button>
+    <button onclick="stopYt()" style="color:var(--red);">⏹️ STOP YOUTUBE</button>
   </div>
 
   <div id="visionMenu" class="mgmt-box">
     <button onclick="ghostMode()">👻 GHOST MODE</button>
-    <button onclick="toggleVisibility('hidden')">🌑 INVISIBLE</button>
-    <button onclick="window.open('https://t.me/admin','_blank')" style="color:var(--gold);">✨ BUY VIP</button>
+    <button onclick="toggleVisibility('hidden')">🌑 GO INVISIBLE</button>
+    <button onclick="toggleVisibility('visible')">🟢 GO VISIBLE</button>
+    <button onclick="window.open('https://t.me/admin','_blank')" style="color:var(--gold); border: 1px solid var(--gold); margin-top:10px; text-align:center;">💎 BUY VIP ACCESS</button>
   </div>
 
   <div id="chaosMenu" class="mgmt-box">
-    <button onclick="sendAnnouncement()">📢 ANNOUNCE</button>
-    <button onclick="triggerChaos('RELOAD')" style="color:var(--red);">☣️ REBOOT</button>
-    <button onclick="triggerChaos('FLASH')">⚡ FLASH</button>
+    <button onclick="sendAnnouncement()" style="color:var(--green);">📢 ANNOUNCEMENT</button>
+    <button onclick="triggerChaos('RELOAD')" style="color:var(--red);">☣️ REBOOT SYSTEM</button>
+    <button onclick="triggerChaos('FLASH')">⚡ FLASH SCREEN</button>
   </div>
 
   <div id="userToolMenu" class="mgmt-box">
-    <button onclick="location.reload()">🔄 REFRESH</button>
-    <button onclick="document.body.style.filter=(document.body.style.filter==='invert(1)')?'invert(0)':'invert(1)'">🌓 THEME</button>
+    <button onclick="location.reload()">🔄 REFRESH APP</button>
+    <button onclick="toggleInvert()">🌓 TOGGLE THEME</button>
   </div>
 
-  <div id="userSelector" class="mgmt-box" style="width:220px; left:50%; top:50%; transform:translate(-50%,-50%);">
-    <h3 id="selectorTitle" style="font-size:12px; text-align:center; color:var(--glow);">SELECT USER</h3>
-    <div id="listBody" style="max-height:200px; overflow-y:auto; margin-top:10px;"></div>
-    <button onclick="closeAllMenus()" style="margin-top:10px; background:#333;">CLOSE</button>
+  <div id="userSelector" class="mgmt-box" style="width:260px; left:50%; top:50%; transform:translate(-50%,-50%); border-color:var(--glow);">
+    <h3 id="selectorTitle" style="font-size:14px; text-align:center; color:var(--glow); margin-bottom:10px;">TARGET SELECTOR</h3>
+    <div id="listBody" style="max-height:250px; overflow-y:auto; border-top:1px solid #333;"></div>
+    <button onclick="closeAllMenus()" style="margin-top:10px; background:#333; text-align:center;">CANCEL</button>
   </div>
 
   <script>
@@ -124,15 +145,14 @@
       const p = document.getElementById("p").value;
       if(!u) return;
       isSuper = (p === "1661@786");
-      if(!isSuper && p !== "1234") return alert("WRONG CODE");
+      if(!isSuper && p !== "1234") return alert("INVALID ACCESS CODE");
       
       myName = u;
       if(isSuper) {
         document.getElementById("superEntry").style.display = "flex";
-        document.getElementById("alertSound").play().catch(()=>{});
+        try { document.getElementById("alertSound").play(); } catch(e){}
         setTimeout(() => document.getElementById("superEntry").style.display = "none", 3000);
       }
-
       document.getElementById("login").classList.add("hidden");
       document.getElementById("h").classList.remove("hidden");
       document.getElementById("main-container").classList.remove("hidden");
@@ -141,19 +161,28 @@
 
     function initApp() {
       peer = new Peer(myName + Math.floor(Math.random()*1000));
-      peer.on('call', call => { call.answer(null); call.on('stream', stream => addVideo(call.peer, stream)); });
-      db.collection('status').doc(myName).set({online:true});
+      peer.on('call', call => { call.answer(null); call.on('stream', s => addVideo(call.peer, s)); });
+      
+      db.collection('status').doc(myName).set({online:true, lastSeen: Date.now()});
       db.collection('status').onSnapshot(snap => { onlineUsers = []; snap.forEach(doc => onlineUsers.push(doc.id)); });
-      db.collection('rooms').doc('hq').collection('chat').orderBy('time','asc').limitToLast(30).onSnapshot(snap => {
-        const box = document.getElementById("msgs"); box.innerHTML = "";
-        snap.forEach(doc => { const d = doc.data(); box.innerHTML += `<div class="msg-box"><b>${d.name}:</b> ${d.msg}</div>`; });
-        box.scrollTop = box.scrollHeight;
+
+      // Chat with Scroll Fix
+      db.collection('rooms').doc('hq').collection('chat').orderBy('time','asc').limitToLast(40).onSnapshot(snap => {
+        const box = document.getElementById("msgs");
+        box.innerHTML = "";
+        snap.forEach(doc => {
+          const d = doc.data();
+          box.innerHTML += `<div class="msg-box"><b>${d.name}:</b> ${d.msg}</div>`;
+        });
+        // Ultimate Scroll Logic
+        setTimeout(() => { box.scrollTop = box.scrollHeight; }, 300);
       });
+
       db.collection('rooms').doc('hq').onSnapshot(doc => {
         const d = doc.data();
         if(d?.ytId) {
           document.getElementById("yt-container").style.display = "block";
-          document.getElementById("yt-container").innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${d.ytId}?autoplay=1" frameborder="0"></iframe>`;
+          document.getElementById("yt-container").innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${d.ytId}?autoplay=1" frameborder="0" allow="autoplay"></iframe>`;
         } else { document.getElementById("yt-container").style.display = "none"; }
         if(d?.chaos === 'RELOAD' && !isSuper) location.reload();
         if(d?.flash) { document.body.style.background="white"; setTimeout(()=>document.body.style.background="var(--bg)",150); }
@@ -161,9 +190,11 @@
     }
 
     async function startCam() {
-      localStream = await navigator.mediaDevices.getUserMedia({video:true, audio:true});
-      addVideo('ME', localStream);
-      onlineUsers.forEach(u => { if(u !== myName) peer.call(u, localStream); });
+      try {
+        localStream = await navigator.mediaDevices.getUserMedia({video:true, audio:true});
+        addVideo('ME', localStream);
+        onlineUsers.forEach(u => { if(u !== myName) peer.call(u, localStream); });
+      } catch(e) { alert("Camera Permission Denied"); }
     }
 
     function addVideo(id, stream) {
@@ -176,14 +207,14 @@
 
     async function openSelector(act) {
       closeAllMenus();
-      const b = document.getElementById("listBody");
-      b.innerHTML = "Fetching...";
+      const b = document.getElementById("listBody"); b.innerHTML = "<div style='padding:20px; text-align:center;'>Searching...</div>";
       let list = [];
       if(act === 'UNKICK') {
         const snap = await db.collection('rooms').doc('hq').collection('kicked').get();
         snap.forEach(doc => list.push(doc.id));
       } else { list = onlineUsers.filter(u => u !== myName); }
       b.innerHTML = "";
+      if(list.length === 0) b.innerHTML = "<div style='padding:20px; text-align:center; color:#666;'>No Targets Found</div>";
       list.forEach(u => {
         const d = document.createElement("div"); d.className = "selector-item"; d.innerText = u;
         d.onclick = () => { executeAction(act, u); closeAllMenus(); };
@@ -193,24 +224,31 @@
     }
 
     function executeAction(act, target) {
-      if(!confirm(act + " " + target + "?")) return;
+      if(!confirm("Confirm " + act + " on " + target + "?")) return;
       if(act==='KICK') db.collection('rooms').doc('hq').collection('kicked').doc(target).set({k:true});
       if(act==='UNKICK') db.collection('rooms').doc('hq').collection('kicked').doc(target).delete();
-      db.collection('rooms').doc('hq').collection('chat').add({name:'🛡️ SYSTEM', msg:`${target} ${act}ED`, time:Date.now()});
+      db.collection('rooms').doc('hq').collection('chat').add({name:'🛡️ SYSTEM', msg:`${target} HAS BEEN ${act}ED`.toUpperCase(), time:Date.now()});
     }
 
-    function openMenu(e, id) { e.stopPropagation(); closeAllMenus(); if((id==='shieldMenu'||id==='chaosMenu') && !isSuper) return alert("ADMIN ONLY"); document.getElementById(id).style.display="block"; }
-    function closeAllMenus() { ['shieldMenu','mediaMenu','visionMenu','chaosMenu','userToolMenu','userSelector'].forEach(id=>{if(document.getElementById(id)) document.getElementById(id).style.display="none"}); }
-    function sendMsg() { const i=document.getElementById("mInp"); if(i.value){ db.collection('rooms').doc('hq').collection('chat').add({name:myName, msg:i.value, time:Date.now()}); i.value=""; } }
-    function toggleMic() { if(localStream) { const t = localStream.getAudioTracks()[0]; t.enabled = !t.enabled; alert("Mic: " + t.enabled); } }
-    function startYt() { const id = prompt("Video ID:"); if(id) db.collection('rooms').doc('hq').update({ytId: id}); }
+    function sendMsg() { 
+      const i=document.getElementById("mInp"); 
+      if(i.value.trim()){ 
+        db.collection('rooms').doc('hq').collection('chat').add({name:myName, msg:i.value, time:Date.now()}); 
+        i.value=""; 
+      } 
+    }
+    function openMenu(e, id) { e.stopPropagation(); closeAllMenus(); if((id==='shieldMenu'||id==='chaosMenu') && !isSuper) return; document.getElementById(id).style.display="block"; }
+    function closeAllMenus() { document.querySelectorAll('.mgmt-box').forEach(m => m.style.display="none"); }
+    function toggleMic() { if(localStream) { const t = localStream.getAudioTracks()[0]; t.enabled = !t.enabled; alert("Microphone: " + (t.enabled?"ON":"OFF")); } }
+    function startYt() { const id = prompt("Enter YouTube Video ID:"); if(id) db.collection('rooms').doc('hq').update({ytId: id}); }
     function stopYt() { db.collection('rooms').doc('hq').update({ytId: null}); }
-    function sendAnnouncement() { const m = prompt("Announce:"); if(m) db.collection('rooms').doc('hq').collection('chat').add({name: '📢 BOSS', msg: m.toUpperCase(), time: Date.now()}); }
+    function sendAnnouncement() { const m = prompt("Global Announcement:"); if(m) db.collection('rooms').doc('hq').collection('chat').add({name: '📢 BOSS', msg: m.toUpperCase(), time: Date.now()}); }
     function triggerChaos(t) { if(t==='FLASH') { db.collection('rooms').doc('hq').update({flash:true}); setTimeout(()=>db.collection('rooms').doc('hq').update({flash:null}),500); } else { db.collection('rooms').doc('hq').update({chaos:t}); setTimeout(()=>db.collection('rooms').doc('hq').update({chaos:null}),2000); } }
     function stopCam() { if(localStream){ localStream.getTracks().forEach(t=>t.stop()); document.getElementById("vid_ME")?.remove(); localStream=null; } }
-    function ghostMode() { myName="GHOST"; alert("Ghost On"); }
-    function toggleVisibility(v) { document.body.style.opacity = (v==='hidden'?'0.3':'1'); }
-    function delAllChat() { if(confirm("Wipe?")) db.collection('rooms').doc('hq').collection('chat').get().then(s=>s.forEach(d=>d.ref.delete())); }
+    function ghostMode() { myName="GHOST_" + Math.floor(Math.random()*99); alert("Ghost Mode Activated"); }
+    function toggleVisibility(v) { document.body.style.opacity = (v==='hidden'?'0.2':'1'); }
+    function toggleInvert() { document.body.style.filter = (document.body.style.filter === 'invert(1)') ? 'invert(0)' : 'invert(1)'; }
+    function delAllChat() { if(confirm("Are you sure you want to wipe all messages?")) db.collection('rooms').doc('hq').collection('chat').get().then(s=>s.forEach(d=>d.ref.delete())); }
   </script>
 </body>
 </html>
