@@ -2,247 +2,215 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Friendchat.Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>HQ CYBER PRO V12.4 - BOSS ENTRY</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
-    :root { --glow: #00f2ff; --red: #ff4444; --bg: #050508; --gold: #ffd700; --green: #00ff88; }
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+    :root { --glow: #00f2ff; --bg: #050508; --gold: #ffd700; --red: #ff0000; --green: #00ff88; }
+    * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
     body { background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
 
-    header { background: rgba(0,0,0,0.95); padding: 12px; border-bottom: 2px solid var(--glow); z-index: 100; }
-    .status-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .live-tag { font-family: 'Orbitron'; font-size: 9px; color: var(--green); border: 1px solid var(--green); padding: 2px 6px; border-radius: 4px; }
+    /* --- SUPER ENTRY STYLE --- */
+    #superEntry { position: fixed; inset: 0; background: #000; z-index: 50000; display: none; align-items: center; justify-content: center; border: 15px solid var(--red); }
+    .entry-text { color: var(--red); font-family: 'Orbitron'; font-size: 35px; text-align: center; animation: shake 0.1s infinite; text-shadow: 0 0 15px var(--red); }
+    @keyframes shake { 0% { transform: translate(2px, 2px); } 50% { transform: translate(-2px, -2px); } 100% { transform: translate(0); } }
+
+    header { background: #000; padding: 10px; border-bottom: 2px solid var(--glow); z-index: 1000; }
+    .nav-container { display: flex; gap: 10px; justify-content: space-around; padding: 5px; }
+    .master-icon { font-size: 24px; cursor: pointer; background: none; border: none; }
+
+    #left-side { display: flex; gap: 10px; padding: 10px; overflow-x: auto; background: #000; border-bottom: 1px solid #222; min-height: 125px; }
+    .vid-box { width: 140px; height: 105px; border: 2px solid var(--glow); border-radius: 5px; position: relative; flex-shrink: 0; }
+    video { width: 100%; height: 100%; object-fit: cover; }
+    .vid-label { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.7); font-size: 10px; text-align: center; color: var(--glow); }
+
+    #msgs { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; scroll-behavior: smooth; }
+    .msg-box { padding: 10px; border-radius: 6px; background: rgba(255,255,255,0.05); border-left: 4px solid var(--glow); }
+
+    .mgmt-box { display: none; position: fixed; background: #0d0d0d; border: 2px solid var(--gold); padding: 10px; border-radius: 10px; z-index: 10000; width: 200px; box-shadow: 0 0 20px rgba(255,0,0,0.5); }
+    .mgmt-box button { width: 100%; padding: 12px; margin-bottom: 6px; background: #1a1a1a; border: 1px solid #333; color: white; cursor: pointer; text-align: left; font-size: 11px; font-family: 'Orbitron'; border-radius: 5px; }
     
-    .nav-scroll { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
-    .nav-scroll::-webkit-scrollbar { display: none; }
-
-    .btn { padding: 10px 14px; background: rgba(0, 242, 255, 0.05); color: var(--glow); border: 1px solid var(--glow); cursor: pointer; font-size: 9px; font-weight: bold; font-family: 'Orbitron'; border-radius: 6px; white-space: nowrap; }
-    .btn-vip { background: linear-gradient(45deg, #ffd700, #b8860b); color: #000; border: none; box-shadow: 0 0 10px var(--gold); }
-    .btn-red { border-color: var(--red); color: var(--red); }
-
-    video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); filter: brightness(1.2) contrast(1.1) saturate(1.1); border-radius: 8px; }
-    .cam-card { min-width: 100px; height: 130px; background: #000; border-radius: 8px; overflow: hidden; border: 1px solid #222; position: relative; }
-    #camGrid { display: flex; gap: 10px; overflow-x: auto; padding: 10px; background: rgba(0,0,0,0.4); border-bottom: 1px solid rgba(255,255,255,0.05); }
-
-    #msgs { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-    .msg-box { background: rgba(255,255,255,0.03); border-radius: 10px; padding: 10px; border-left: 3px solid var(--glow); position: relative; }
-    .msg-box.is-vip { border-left-color: var(--gold); background: rgba(255,215,0,0.07); }
-
-    /* Admin Action Buttons inside Chat */
-    .admin-actions { display: flex; gap: 12px; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; }
-    .adm-btn { font-size: 10px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; text-decoration: underline; }
-
-    .dock { padding: 10px; background: #000; border-top: 1px solid #222; display: flex; gap: 8px; }
-    #mInp { flex: 1; background: #111; border: 1px solid #333; padding: 12px; border-radius: 8px; color: #fff; outline: none; }
-
-    .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 100001; display: none; justify-content: center; align-items: center; padding: 20px; }
-    .modal-card { background: #111; padding: 25px; border: 2px solid var(--gold); border-radius: 15px; width: 100%; max-width: 350px; text-align: center; }
-
-    #bossAlert { position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 99999; display: none; flex-direction: column; justify-content: center; align-items: center; border: 10px double var(--gold); }
-    #login { position: fixed; inset: 0; background: #000; z-index: 100000; display: flex; justify-content: center; align-items: center; }
+    #login { position: fixed; inset: 0; background: #000; z-index: 30000; display: flex; align-items: center; justify-content: center; }
     .hidden { display: none !important; }
   </style>
 </head>
-<body onload="checkPrev()">
+<body onclick="closeAllMenus()">
 
-  <audio id="beep" src="https://www.soundjay.com/buttons/beep-01a.mp3"></audio>
+  <audio id="alertSound" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg"></audio>
 
-  <div id="payModal" class="modal">
-    <div class="modal-card">
-      <h2 style="font-family:Orbitron; color:var(--gold); margin-bottom:15px;">💎 VIP PAYMENT</h2>
-      <div style="background:#222; padding:10px; border-radius:8px; margin-bottom:15px; border:1px dashed var(--gold);">
-        Admin Number:<br><b style="color:var(--gold); font-size:16px;">0301-7892647</b>
-      </div>
-      <input type="text" id="payNum" placeholder="Your Number" style="width:100%; padding:10px; background:#000; border:1px solid #333; color:#fff; margin-bottom:10px; border-radius:5px;">
-      <input type="text" id="payTid" placeholder="TID (Transaction ID)" style="width:100%; padding:10px; background:#000; border:1px solid #333; color:#fff; margin-bottom:15px; border-radius:5px;">
-      <button class="btn btn-vip" style="width:100%; margin-bottom:10px;" onclick="submitPayment()">SUBMIT DETAILS</button>
-      <button class="btn" style="width:100%; border-color:#555; color:#888;" onclick="closeModal('payModal')">CLOSE</button>
-    </div>
-  </div>
-
-  <div id="dashModal" class="modal">
-    <div class="modal-card" style="max-height: 80vh; overflow-y: auto;">
-      <h2 style="font-family:Orbitron; color:var(--glow); margin-bottom:15px;">PAYMENT DASH</h2>
-      <div id="payList" style="text-align:left; font-size:12px;"></div>
-      <button class="btn" style="width:100%; margin-top:20px;" onclick="closeModal('dashModal')">CLOSE</button>
-    </div>
-  </div>
-
-  <div id="bossAlert">
-      <h1 id="alertName" style="color:var(--gold); font-family:Orbitron; font-size:45px;">ADMIN</h1>
-      <p style="color:white; letter-spacing:8px; font-family:Orbitron; font-size:10px;">SUPER ENTRY DETECTED</p>
+  <div id="superEntry">
+    <div class="entry-text">SYSTEM BREACHED<br>BOSS IS HERE!</div>
   </div>
 
   <div id="login">
-    <div style="width:80%; text-align:center;">
-      <h2 style="font-family:Orbitron; color:var(--glow); margin-bottom:20px;">HQ_V5_STABLE</h2>
-      <input type="text" id="u" placeholder="NICKNAME" style="width:100%; padding:15px; background:#111; border:1px solid #333; color:#fff; margin-bottom:10px; border-radius:8px;">
-      <input type="password" id="p" placeholder="CODE" style="width:100%; padding:15px; background:#111; border:1px solid #333; color:#fff; margin-bottom:20px; border-radius:8px;">
-      <button class="btn" style="width:100%; padding:15px;" onclick="connect()">ENTER ROOM</button>
+    <div style="width: 85%; max-width: 320px; text-align: center;">
+      <h1 style="font-family:Orbitron; color:var(--glow); margin-bottom:20px;">CYBER PRO V12.4</h1>
+      <input type="text" id="u" placeholder="NICKNAME" style="width:100%; padding:14px; margin-bottom:12px; background:#111; color:white; border:1px solid #333; border-radius:8px;">
+      <input type="password" id="p" placeholder="CODE" style="width:100%; padding:14px; margin-bottom:20px; background:#111; color:white; border:1px solid #333; border-radius:8px;">
+      <button onclick="connect()" style="width:100%; padding:15px; background:var(--glow); border:none; border-radius:8px; font-family:Orbitron; cursor:pointer; color:black; font-weight:bold;">BOOT SYSTEM</button>
     </div>
   </div>
 
   <header id="h" class="hidden">
-    <div class="status-bar">
-      <div class="live-tag">● LIVE: <span id="uCount">0</span></div>
-      <div id="adminPanel" style="display:none; gap:5px;">
-        <button class="btn btn-red" id="lockBtn" onclick="toggleLock()">🔓 UNLOCKED</button>
-        <button class="btn" style="border-color:var(--gold); color:var(--gold);" onclick="openDash()">📊 DASH</button>
-        <button class="btn" style="background:var(--gold); color:#000;" onclick="triggerHero()">⚡ FLASH</button>
-      </div>
-    </div>
-    <div class="nav-scroll">
-      <button class="btn btn-vip" onclick="openModal('payModal')">💎 BUY VIP</button>
-      <button class="btn" onclick="toggleCam()">📹 BEAUTY CAM</button>
-      <button class="btn" id="micBtn" onclick="toggleMic()">🎙️ MIC</button>
-      <button class="btn" onclick="playMusic()">🎵 YT</button>
-      <button class="btn btn-red" onclick="stopYT()">⏹️ STOP</button>
-      <button class="btn" onclick="invite()">🔗 LINK</button>
-      <button class="btn btn-red" onclick="location.reload()">EXIT</button>
+    <div class="nav-container">
+      <button class="master-icon" onclick="openMenu(event, 'shieldMenu')">🛡️</button>
+      <button class="master-icon" onclick="openMenu(event, 'mediaMenu')">🎥</button>
+      <button class="master-icon" onclick="openMenu(event, 'visionMenu')">👁️</button>
+      <button class="master-icon" onclick="openMenu(event, 'chaosMenu')">⚡</button>
+      <button class="master-icon" style="color:var(--green);" onclick="openMenu(event, 'userToolMenu')">⚙️</button>
     </div>
   </header>
 
-  <div id="main" class="hidden" style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
-    <div id="camGrid"></div>
-    <iframe id="yt-frame" style="width:100%; height:80px; display:none; border:none;" src="" allow="autoplay"></iframe>
-    <div id="msgs"></div>
-    <div class="dock">
-      <input type="text" id="mInp" placeholder="Write message..." onkeypress="if(event.key==='Enter') sendMsg()">
-      <button class="btn" onclick="sendMsg()" style="background:var(--glow); color:#000; border:none;">SEND</button>
+  <div id="main-container" class="hidden">
+    <div id="input-section" style="background:#0a0a0a; padding:10px; display:flex; gap:8px;">
+      <input type="text" id="mInp" placeholder="Message..." onkeypress="if(event.key==='Enter') sendMsg()" style="flex:1; background:#111; border:1px solid #444; color:white; padding:12px; border-radius:8px;">
+      <button onclick="sendMsg()" style="background:var(--glow); border:none; padding:10px 15px; border-radius:5px; font-weight:bold;">SEND</button>
     </div>
+    <div id="left-side"></div>
+    <div id="yt-container" style="display:none; width:100%; aspect-ratio:16/9;"></div>
+    <div id="msgs"></div>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <div id="shieldMenu" class="mgmt-box">
+    <button onclick="openSelector('KICK')" style="color:var(--red);">🚫 KICK USER</button>
+    <button onclick="openSelector('UNKICK')" style="color:var(--green);">🔓 UNKICK USER</button>
+    <button onclick="openSelector('VIP')" style="color:var(--gold);">💎 GIVE VIP</button>
+    <button onclick="openSelector('REVOKE')">🟠 REVOKE VIP</button>
+    <button onclick="delAllChat()" style="color:var(--red);">🔥 WIPE CHAT</button>
+  </div>
+
+  <div id="mediaMenu" class="mgmt-box">
+    <button onclick="startCam()">📹 LIVE CAM ON</button>
+    <button onclick="stopCam()">🚫 STOP CAM</button>
+    <button onclick="toggleMic()" style="color:var(--green);">🎙️ MIC TOGGLE</button>
+    <button onclick="startYt()">📺 YT START</button>
+    <button onclick="stopYt()">⏹️ YT STOP</button>
+  </div>
+
+  <div id="visionMenu" class="mgmt-box">
+    <button onclick="ghostMode()">👻 GHOST MODE</button>
+    <button onclick="toggleVisibility('hidden')">🌑 INVISIBLE</button>
+    <button onclick="window.open('https://t.me/admin','_blank')" style="color:var(--gold);">✨ BUY VIP</button>
+  </div>
+
+  <div id="chaosMenu" class="mgmt-box">
+    <button onclick="sendAnnouncement()">📢 ANNOUNCE</button>
+    <button onclick="triggerChaos('RELOAD')" style="color:var(--red);">☣️ REBOOT</button>
+    <button onclick="triggerChaos('FLASH')">⚡ FLASH</button>
+  </div>
+
+  <div id="userToolMenu" class="mgmt-box">
+    <button onclick="location.reload()">🔄 REFRESH</button>
+    <button onclick="document.body.style.filter=(document.body.style.filter==='invert(1)')?'invert(0)':'invert(1)'">🌓 THEME</button>
+  </div>
+
+  <div id="userSelector" class="mgmt-box" style="width:220px; left:50%; top:50%; transform:translate(-50%,-50%);">
+    <h3 id="selectorTitle" style="font-size:12px; text-align:center; color:var(--glow);">SELECT USER</h3>
+    <div id="listBody" style="max-height:200px; overflow-y:auto; margin-top:10px;"></div>
+    <button onclick="closeAllMenus()" style="margin-top:10px; background:#333;">CLOSE</button>
+  </div>
+
   <script>
     const firebaseConfig = { apiKey: "AIzaSyA806HxxZejS_l5_pWAb9cJ0pbbhNhgR8A", authDomain: "call-2b58d.firebaseapp.com", projectId: "call-2b58d", appId: "1:693359105489:web:6802540c272a565d27bcf0" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-    
-    let myName = "", isSuper = false, vips = [], camStream = null, peer = null, lastSig = Date.now(), isLocked = false;
-
-    function checkPrev() { if(localStorage.getItem("user_n")) document.getElementById("u").value = localStorage.getItem("user_n"); }
+    let myName = "", isSuper = false, localStream = null, peer = null, onlineUsers = [];
 
     async function connect() {
       const u = document.getElementById("u").value.trim().toUpperCase();
       const p = document.getElementById("p").value;
       if(!u) return;
-      const roomDoc = await db.collection('rooms').doc('hq').get();
-      const roomData = roomDoc.data();
-      if(p === "1661@786") { isSuper = true; }
-      else if(p === "1234") {
-          if(roomData && roomData.locked) { alert("LOCKED!"); return; }
-          isSuper = false;
-      } else { alert("WRONG CODE"); return; }
-
-      const kickCheck = await db.collection('rooms').doc('hq').collection('kicked').doc(u).get();
-      if(kickCheck.exists) { alert("YOU ARE KICKED!"); return; }
-
+      isSuper = (p === "1661@786");
+      if(!isSuper && p !== "1234") return alert("WRONG CODE");
+      
       myName = u;
-      localStorage.setItem("user_n", u);
-      document.getElementById("login").style.display = "none";
+      if(isSuper) {
+        document.getElementById("superEntry").style.display = "flex";
+        document.getElementById("alertSound").play().catch(()=>{});
+        setTimeout(() => document.getElementById("superEntry").style.display = "none", 3000);
+      }
+
+      document.getElementById("login").classList.add("hidden");
       document.getElementById("h").classList.remove("hidden");
-      document.getElementById("main").classList.remove("hidden");
-      if(isSuper) { document.getElementById("adminPanel").style.display = "flex"; triggerHero(); }
-      initSystem();
+      document.getElementById("main-container").classList.remove("hidden");
+      initApp();
     }
 
-    function initSystem() {
-      setInterval(() => { db.collection('rooms').doc('hq').collection('users').doc(myName).set({ lastSeen: Date.now() }); }, 10000);
-      db.collection('rooms').doc('hq').collection('users').onSnapshot(s => {
-          const now = Date.now();
-          let count = 0;
-          s.forEach(doc => { if(now - doc.data().lastSeen < 25000) count++; });
-          document.getElementById("uCount").innerText = count;
-      });
-
-      db.collection('rooms').doc('hq').collection('vips').onSnapshot(s => { vips = s.docs.map(d => d.id); });
-
-      db.collection('rooms').doc('hq').collection('chat').orderBy('time', 'asc').onSnapshot(snap => {
-        const box = document.getElementById("msgs");
-        snap.docChanges().forEach(change => {
-          if (change.type === "added") {
-            const d = change.doc.data();
-            const isV = vips.includes(d.name);
-            const m = document.createElement("div");
-            m.className = `msg-box ${isV ? 'is-vip' : ''}`;
-            m.innerHTML = `<span style="font-family:Orbitron; font-size:10px; color:${isV?'var(--gold)':'var(--glow)'}">${d.name} ${isV?'💎':''}</span>
-            <div style="font-size:14px; margin-top:3px;">${d.msg}</div>
-            ${isSuper ? `<div class="admin-actions">
-              <span class="adm-btn" style="color:var(--gold)" onclick="makeV('${d.name}')">VIP</span>
-              <span class="adm-btn" style="color:#aaa" onclick="revV('${d.name}')">REVOKE</span>
-              <span class="adm-btn" style="color:var(--red)" onclick="kickUser('${d.name}')">KICK</span>
-              <span class="adm-btn" style="color:#555" onclick="delMsg('${change.doc.id}')">DEL</span>
-            </div>` : ''}`;
-            box.appendChild(m);
-          }
-        });
+    function initApp() {
+      peer = new Peer(myName + Math.floor(Math.random()*1000));
+      peer.on('call', call => { call.answer(null); call.on('stream', stream => addVideo(call.peer, stream)); });
+      db.collection('status').doc(myName).set({online:true});
+      db.collection('status').onSnapshot(snap => { onlineUsers = []; snap.forEach(doc => onlineUsers.push(doc.id)); });
+      db.collection('rooms').doc('hq').collection('chat').orderBy('time','asc').limitToLast(30).onSnapshot(snap => {
+        const box = document.getElementById("msgs"); box.innerHTML = "";
+        snap.forEach(doc => { const d = doc.data(); box.innerHTML += `<div class="msg-box"><b>${d.name}:</b> ${d.msg}</div>`; });
         box.scrollTop = box.scrollHeight;
       });
-
       db.collection('rooms').doc('hq').onSnapshot(doc => {
         const d = doc.data();
-        if(d && d.sig > lastSig) {
-          document.getElementById("alertName").innerText = d.boss;
-          document.getElementById("bossAlert").style.display = "flex";
-          document.getElementById("beep").play().catch(()=>{});
-          setTimeout(() => document.getElementById("bossAlert").style.display = "none", 4000);
-          lastSig = d.sig;
-        }
-        if(d && d.locked !== undefined) { isLocked = d.locked; if(isSuper) document.getElementById("lockBtn").innerText = isLocked ? "🔒 LOCKED" : "🔓 UNLOCKED"; }
-        if(d && d.ytId) {
-          const f = document.getElementById("yt-frame"); f.style.display="block";
-          if(!f.src.includes(d.ytId)) f.src=`https://www.youtube.com/embed/${d.ytId}?autoplay=1`;
-        } else { document.getElementById("yt-frame").style.display="none"; }
+        if(d?.ytId) {
+          document.getElementById("yt-container").style.display = "block";
+          document.getElementById("yt-container").innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${d.ytId}?autoplay=1" frameborder="0"></iframe>`;
+        } else { document.getElementById("yt-container").style.display = "none"; }
+        if(d?.chaos === 'RELOAD' && !isSuper) location.reload();
+        if(d?.flash) { document.body.style.background="white"; setTimeout(()=>document.body.style.background="var(--bg)",150); }
       });
     }
 
-    // --- Admin Fixed Functions ---
-    function makeV(u) { db.collection('rooms').doc('hq').collection('vips').doc(u).set({v:true}).then(()=>alert(u+" is VIP")); }
-    function revV(u) { db.collection('rooms').doc('hq').collection('vips').doc(u).delete().then(()=>alert("VIP Revoked")); }
-    function kickUser(u) { db.collection('rooms').doc('hq').collection('kicked').doc(u).set({k:true}).then(()=>alert(u+" Kicked!")); }
-    function delMsg(id) { db.collection('rooms').doc('hq').collection('chat').doc(id).delete(); }
-    function toggleLock() { isLocked = !isLocked; db.collection('rooms').doc('hq').update({ locked: isLocked }); }
-    function triggerHero() { db.collection('rooms').doc('hq').update({ boss: myName, sig: Date.now() }); }
+    async function startCam() {
+      localStream = await navigator.mediaDevices.getUserMedia({video:true, audio:true});
+      addVideo('ME', localStream);
+      onlineUsers.forEach(u => { if(u !== myName) peer.call(u, localStream); });
+    }
 
-    // --- Others ---
-    function openModal(id) { document.getElementById(id).style.display = "flex"; }
-    function closeModal(id) { document.getElementById(id).style.display = "none"; }
-    async function submitPayment() {
-      const num = document.getElementById("payNum").value;
-      const tid = document.getElementById("payTid").value;
-      if(!num || !tid) return;
-      await db.collection('rooms').doc('hq').collection('payments').add({ user: myName, phone: num, tid: tid, time: new Date().toLocaleString() });
-      window.open(`https://wa.me/923017892647?text=VIP_PAYMENT%0ANick: ${myName}%0ATID: ${tid}`);
-      closeModal('payModal');
+    function addVideo(id, stream) {
+      if(document.getElementById("vid_"+id)) return;
+      const div = document.createElement("div"); div.className="vid-box"; div.id="vid_"+id;
+      const v = document.createElement("video"); v.srcObject = stream; v.autoplay = true; v.playsinline = true;
+      const l = document.createElement("div"); l.className="vid-label"; l.innerText=id;
+      div.append(v, l); document.getElementById("left-side").appendChild(div);
     }
-    async function openDash() {
-      openModal('dashModal');
-      const list = document.getElementById("payList"); list.innerHTML = "Loading...";
-      const snp = await db.collection('rooms').doc('hq').collection('payments').orderBy('time','desc').limit(10).get();
-      list.innerHTML = "";
-      snp.forEach(doc => { const p = doc.data(); list.innerHTML += `<div style="border-bottom:1px solid #333; padding:5px;"><b>${p.user}</b>: ${p.tid}</div>`; });
+
+    async function openSelector(act) {
+      closeAllMenus();
+      const b = document.getElementById("listBody");
+      b.innerHTML = "Fetching...";
+      let list = [];
+      if(act === 'UNKICK') {
+        const snap = await db.collection('rooms').doc('hq').collection('kicked').get();
+        snap.forEach(doc => list.push(doc.id));
+      } else { list = onlineUsers.filter(u => u !== myName); }
+      b.innerHTML = "";
+      list.forEach(u => {
+        const d = document.createElement("div"); d.className = "selector-item"; d.innerText = u;
+        d.onclick = () => { executeAction(act, u); closeAllMenus(); };
+        b.append(d);
+      });
+      document.getElementById("userSelector").style.display = "block";
     }
-    async function toggleCam() {
-      if(!camStream) { camStream = await navigator.mediaDevices.getUserMedia({video: true, audio: true}); addVideo(myName, camStream); }
-      else { location.reload(); }
+
+    function executeAction(act, target) {
+      if(!confirm(act + " " + target + "?")) return;
+      if(act==='KICK') db.collection('rooms').doc('hq').collection('kicked').doc(target).set({k:true});
+      if(act==='UNKICK') db.collection('rooms').doc('hq').collection('kicked').doc(target).delete();
+      db.collection('rooms').doc('hq').collection('chat').add({name:'🛡️ SYSTEM', msg:`${target} ${act}ED`, time:Date.now()});
     }
-    function addVideo(uid, stream) {
-      let v = document.getElementById(`vid-${uid}`);
-      if(!v) {
-        const d = document.createElement("div"); d.className = "cam-card";
-        d.innerHTML = `<video id="vid-${uid}" autoplay playsinline></video><div style="font-size:8px; text-align:center;">${uid}</div>`;
-        document.getElementById("camGrid").appendChild(d); v = document.getElementById(`vid-${uid}`);
-      }
-      v.srcObject = stream;
-    }
-    function toggleMic() { if(camStream) { let t = camStream.getAudioTracks()[0]; t.enabled = !t.enabled; document.getElementById("micBtn").innerText = t.enabled ? "🎙️ ON" : "🎙️ OFF"; } }
-    function sendMsg() { const i = document.getElementById("mInp"); if(i.value) { db.collection('rooms').doc('hq').collection('chat').add({ name: myName, msg: i.value, time: Date.now() }); i.value = ""; } }
-    function playMusic() { const id = prompt("YT ID:"); if(id) db.collection('rooms').doc('hq').update({ ytId: id }); }
-    function stopYT() { db.collection('rooms').doc('hq').update({ ytId: null }); }
-    function invite() { window.open(`https://wa.me/?text=Join My HQ: ${window.location.href}`); }
+
+    function openMenu(e, id) { e.stopPropagation(); closeAllMenus(); if((id==='shieldMenu'||id==='chaosMenu') && !isSuper) return alert("ADMIN ONLY"); document.getElementById(id).style.display="block"; }
+    function closeAllMenus() { ['shieldMenu','mediaMenu','visionMenu','chaosMenu','userToolMenu','userSelector'].forEach(id=>{if(document.getElementById(id)) document.getElementById(id).style.display="none"}); }
+    function sendMsg() { const i=document.getElementById("mInp"); if(i.value){ db.collection('rooms').doc('hq').collection('chat').add({name:myName, msg:i.value, time:Date.now()}); i.value=""; } }
+    function toggleMic() { if(localStream) { const t = localStream.getAudioTracks()[0]; t.enabled = !t.enabled; alert("Mic: " + t.enabled); } }
+    function startYt() { const id = prompt("Video ID:"); if(id) db.collection('rooms').doc('hq').update({ytId: id}); }
+    function stopYt() { db.collection('rooms').doc('hq').update({ytId: null}); }
+    function sendAnnouncement() { const m = prompt("Announce:"); if(m) db.collection('rooms').doc('hq').collection('chat').add({name: '📢 BOSS', msg: m.toUpperCase(), time: Date.now()}); }
+    function triggerChaos(t) { if(t==='FLASH') { db.collection('rooms').doc('hq').update({flash:true}); setTimeout(()=>db.collection('rooms').doc('hq').update({flash:null}),500); } else { db.collection('rooms').doc('hq').update({chaos:t}); setTimeout(()=>db.collection('rooms').doc('hq').update({chaos:null}),2000); } }
+    function stopCam() { if(localStream){ localStream.getTracks().forEach(t=>t.stop()); document.getElementById("vid_ME")?.remove(); localStream=null; } }
+    function ghostMode() { myName="GHOST"; alert("Ghost On"); }
+    function toggleVisibility(v) { document.body.style.opacity = (v==='hidden'?'0.3':'1'); }
+    function delAllChat() { if(confirm("Wipe?")) db.collection('rooms').doc('hq').collection('chat').get().then(s=>s.forEach(d=>d.ref.delete())); }
   </script>
 </body>
 </html>
