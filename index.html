@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>HQ CYBER PRO V12.8 - FINAL</title>
+  <title>HQ CYBER PRO </title>
   
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
@@ -39,7 +39,7 @@
     #mInp { flex: 1; background: #111; border: 1px solid #444; color: white; padding: 12px; border-radius: 8px; font-size: 14px; }
     .send-btn { background: var(--glow); border: none; padding: 0 20px; border-radius: 8px; font-weight: bold; color: #000; cursor: pointer; }
 
-    /* Chat Messages - Scroll Fixed */
+    /* Chat Messages */
     #msgs { flex: 1; overflow-y: auto !important; -webkit-overflow-scrolling: touch; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
     .msg-box { padding: 12px; border-radius: 8px; background: rgba(255,255,255,0.05); border-left: 4px solid var(--glow); flex-shrink: 0; word-break: break-all; animation: slideIn 0.2s ease-out; }
     @keyframes slideIn { from { transform: translateX(-10px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
@@ -49,10 +49,9 @@
     /* Floating Menus */
     .mgmt-box { display: none; position: fixed; background: #0d0d0d; border: 2px solid var(--gold); padding: 12px; border-radius: 12px; z-index: 10000; width: 220px; box-shadow: 0 0 30px rgba(0,0,0,1); }
     .mgmt-box button { width: 100%; padding: 12px; margin-bottom: 8px; background: #1a1a1a; border: 1px solid #333; color: white; cursor: pointer; text-align: left; font-size: 12px; font-family: 'Orbitron'; border-radius: 6px; }
-    .mgmt-box button:active { background: #333; }
 
     /* Login Screen */
-    #login { position: fixed; inset: 0; background: #000; z-index: 30000; display: flex; align-items: center; justify-content: center; background-image: radial-gradient(circle, #111 0%, #000 100%); }
+    #login { position: fixed; inset: 0; background: #000; z-index: 30000; display: flex; align-items: center; justify-content: center; }
     .hidden { display: none !important; }
     .selector-item { padding: 14px; border-bottom: 1px solid #222; cursor: pointer; color: var(--glow); font-weight: bold; }
   </style>
@@ -70,7 +69,7 @@
       <h1 style="font-family:Orbitron; color:var(--glow); margin-bottom:25px; letter-spacing: 2px;">CYBER PRO V12.8</h1>
       <input type="text" id="u" placeholder="NICKNAME" style="width:100%; padding:15px; margin-bottom:15px; background:#111; color:white; border:1px solid #333; border-radius:10px;">
       <input type="password" id="p" placeholder="ACCESS CODE" style="width:100%; padding:15px; margin-bottom:25px; background:#111; color:white; border:1px solid #333; border-radius:10px;">
-      <button onclick="connect()" style="width:100%; padding:16px; background:var(--glow); border:none; border-radius:10px; font-family:Orbitron; font-weight:bold; cursor:pointer; box-shadow: 0 0 15px var(--glow);">INITIALIZE</button>
+      <button onclick="connect()" style="width:100%; padding:16px; background:var(--glow); border:none; border-radius:10px; font-family:Orbitron; font-weight:bold; cursor:pointer;">INITIALIZE</button>
     </div>
   </div>
 
@@ -98,23 +97,21 @@
     <button onclick="openSelector('KICK')" style="color:var(--red);">🚫 KICK USER</button>
     <button onclick="openSelector('UNKICK')" style="color:var(--green);">🔓 UNKICK USER</button>
     <button onclick="openSelector('VIP')" style="color:var(--gold);">💎 GIVE VIP</button>
-    <button onclick="openSelector('REVOKE')">🟠 REVOKE VIP</button>
-    <button onclick="delAllChat()" style="color:var(--red); border-top:1px solid #444; margin-top:5px;">🔥 WIPE ALL DATA</button>
+    <button onclick="delAllChat()" style="color:var(--red); border-top:1px solid #444;">🔥 WIPE ALL DATA</button>
   </div>
 
   <div id="mediaMenu" class="mgmt-box">
     <button onclick="startCam()">📹 START LIVE CAM</button>
     <button onclick="stopCam()">🚫 STOP STREAM</button>
     <button onclick="toggleMic()" style="color:var(--green);">🎙️ MIC TOGGLE</button>
-    <button onclick="startYt()" style="border-top:1px solid #333;">📺 START YOUTUBE</button>
-    <button onclick="stopYt()" style="color:var(--red);">⏹️ STOP YOUTUBE</button>
+    <button onclick="startYt()">📺 START YOUTUBE</button>
+    <button onclick="stopYt()">⏹️ STOP YOUTUBE</button>
   </div>
 
   <div id="visionMenu" class="mgmt-box">
     <button onclick="ghostMode()">👻 GHOST MODE</button>
     <button onclick="toggleVisibility('hidden')">🌑 GO INVISIBLE</button>
     <button onclick="toggleVisibility('visible')">🟢 GO VISIBLE</button>
-    <button onclick="window.open('https://t.me/admin','_blank')" style="color:var(--gold); border: 1px solid var(--gold); margin-top:10px; text-align:center;">💎 BUY VIP ACCESS</button>
   </div>
 
   <div id="chaosMenu" class="mgmt-box">
@@ -130,7 +127,7 @@
 
   <div id="userSelector" class="mgmt-box" style="width:260px; left:50%; top:50%; transform:translate(-50%,-50%); border-color:var(--glow);">
     <h3 id="selectorTitle" style="font-size:14px; text-align:center; color:var(--glow); margin-bottom:10px;">TARGET SELECTOR</h3>
-    <div id="listBody" style="max-height:250px; overflow-y:auto; border-top:1px solid #333;"></div>
+    <div id="listBody" style="max-height:250px; overflow-y:auto;"></div>
     <button onclick="closeAllMenus()" style="margin-top:10px; background:#333; text-align:center;">CANCEL</button>
   </div>
 
@@ -138,7 +135,9 @@
     const firebaseConfig = { apiKey: "AIzaSyA806HxxZejS_l5_pWAb9cJ0pbbhNhgR8A", authDomain: "call-2b58d.firebaseapp.com", projectId: "call-2b58d", appId: "1:693359105489:web:6802540c272a565d27bcf0" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-    let myName = "", isSuper = false, localStream = null, peer = null, onlineUsers = [];
+
+    let myName = "", isSuper = false, localStream = null, peer = null;
+    let activeCalls = {};
 
     async function connect() {
       const u = document.getElementById("u").value.trim().toUpperCase();
@@ -160,13 +159,31 @@
     }
 
     function initApp() {
-      peer = new Peer(myName + Math.floor(Math.random()*1000));
-      peer.on('call', call => { call.answer(null); call.on('stream', s => addVideo(call.peer, s)); });
-      
-      db.collection('status').doc(myName).set({online:true, lastSeen: Date.now()});
-      db.collection('status').onSnapshot(snap => { onlineUsers = []; snap.forEach(doc => onlineUsers.push(doc.id)); });
+      // Create Peer with consistent ID
+      const myPeerId = myName + "_" + Math.floor(Math.random()*1000);
+      peer = new Peer(myPeerId);
 
-      // Chat with Scroll Fix
+      peer.on('open', (id) => {
+        db.collection('status').doc(myName).set({online:true, peerId: id, lastSeen: Date.now()});
+      });
+
+      // Listen for Incoming Stream
+      peer.on('call', call => {
+        call.answer(localStream); // Answer with stream if active
+        call.on('stream', s => addVideo(call.peer.split('_')[0], s));
+      });
+      
+      // Sync Online Users & Auto-Call
+      db.collection('status').onSnapshot(snap => {
+        snap.forEach(doc => {
+          const data = doc.data();
+          if(doc.id !== myName && data.online && localStream && !activeCalls[doc.id]) {
+            makeCall(data.peerId, doc.id);
+          }
+        });
+      });
+
+      // Chat Sync with Auto Scroll
       db.collection('rooms').doc('hq').collection('chat').orderBy('time','asc').limitToLast(40).onSnapshot(snap => {
         const box = document.getElementById("msgs");
         box.innerHTML = "";
@@ -174,15 +191,15 @@
           const d = doc.data();
           box.innerHTML += `<div class="msg-box"><b>${d.name}:</b> ${d.msg}</div>`;
         });
-        // Ultimate Scroll Logic
-        setTimeout(() => { box.scrollTop = box.scrollHeight; }, 300);
+        box.scrollTop = box.scrollHeight;
       });
 
+      // System Commands Sync
       db.collection('rooms').doc('hq').onSnapshot(doc => {
         const d = doc.data();
         if(d?.ytId) {
           document.getElementById("yt-container").style.display = "block";
-          document.getElementById("yt-container").innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${d.ytId}?autoplay=1" frameborder="0" allow="autoplay"></iframe>`;
+          document.getElementById("yt-container").innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${d.ytId}?autoplay=1" frameborder="0"></iframe>`;
         } else { document.getElementById("yt-container").style.display = "none"; }
         if(d?.chaos === 'RELOAD' && !isSuper) location.reload();
         if(d?.flash) { document.body.style.background="white"; setTimeout(()=>document.body.style.background="var(--bg)",150); }
@@ -193,41 +210,33 @@
       try {
         localStream = await navigator.mediaDevices.getUserMedia({video:true, audio:true});
         addVideo('ME', localStream);
-        onlineUsers.forEach(u => { if(u !== myName) peer.call(u, localStream); });
-      } catch(e) { alert("Camera Permission Denied"); }
+        // Call everyone online
+        const snap = await db.collection('status').get();
+        snap.forEach(doc => {
+          const data = doc.data();
+          if(doc.id !== myName && data.online) makeCall(data.peerId, doc.id);
+        });
+      } catch(e) { alert("Camera Access Denied"); }
+    }
+
+    function makeCall(targetPeerId, targetName) {
+      if(!localStream || activeCalls[targetName]) return;
+      const call = peer.call(targetPeerId, localStream);
+      activeCalls[targetName] = call;
+      call.on('stream', s => addVideo(targetName, s));
     }
 
     function addVideo(id, stream) {
       if(document.getElementById("vid_"+id)) return;
       const div = document.createElement("div"); div.className="vid-box"; div.id="vid_"+id;
       const v = document.createElement("video"); v.srcObject = stream; v.autoplay = true; v.playsinline = true;
+      if(id === 'ME') v.muted = true;
       const l = document.createElement("div"); l.className="vid-label"; l.innerText=id;
       div.append(v, l); document.getElementById("left-side").appendChild(div);
     }
 
-    async function openSelector(act) {
-      closeAllMenus();
-      const b = document.getElementById("listBody"); b.innerHTML = "<div style='padding:20px; text-align:center;'>Searching...</div>";
-      let list = [];
-      if(act === 'UNKICK') {
-        const snap = await db.collection('rooms').doc('hq').collection('kicked').get();
-        snap.forEach(doc => list.push(doc.id));
-      } else { list = onlineUsers.filter(u => u !== myName); }
-      b.innerHTML = "";
-      if(list.length === 0) b.innerHTML = "<div style='padding:20px; text-align:center; color:#666;'>No Targets Found</div>";
-      list.forEach(u => {
-        const d = document.createElement("div"); d.className = "selector-item"; d.innerText = u;
-        d.onclick = () => { executeAction(act, u); closeAllMenus(); };
-        b.append(d);
-      });
-      document.getElementById("userSelector").style.display = "block";
-    }
-
-    function executeAction(act, target) {
-      if(!confirm("Confirm " + act + " on " + target + "?")) return;
-      if(act==='KICK') db.collection('rooms').doc('hq').collection('kicked').doc(target).set({k:true});
-      if(act==='UNKICK') db.collection('rooms').doc('hq').collection('kicked').doc(target).delete();
-      db.collection('rooms').doc('hq').collection('chat').add({name:'🛡️ SYSTEM', msg:`${target} HAS BEEN ${act}ED`.toUpperCase(), time:Date.now()});
+    function stopCam() {
+      if(localStream){ localStream.getTracks().forEach(t=>t.stop()); location.reload(); }
     }
 
     function sendMsg() { 
@@ -237,18 +246,36 @@
         i.value=""; 
       } 
     }
+
+    // Controls
     function openMenu(e, id) { e.stopPropagation(); closeAllMenus(); if((id==='shieldMenu'||id==='chaosMenu') && !isSuper) return; document.getElementById(id).style.display="block"; }
     function closeAllMenus() { document.querySelectorAll('.mgmt-box').forEach(m => m.style.display="none"); }
-    function toggleMic() { if(localStream) { const t = localStream.getAudioTracks()[0]; t.enabled = !t.enabled; alert("Microphone: " + (t.enabled?"ON":"OFF")); } }
-    function startYt() { const id = prompt("Enter YouTube Video ID:"); if(id) db.collection('rooms').doc('hq').update({ytId: id}); }
+    function startYt() { const id = prompt("YouTube ID:"); if(id) db.collection('rooms').doc('hq').update({ytId: id}); }
     function stopYt() { db.collection('rooms').doc('hq').update({ytId: null}); }
-    function sendAnnouncement() { const m = prompt("Global Announcement:"); if(m) db.collection('rooms').doc('hq').collection('chat').add({name: '📢 BOSS', msg: m.toUpperCase(), time: Date.now()}); }
-    function triggerChaos(t) { if(t==='FLASH') { db.collection('rooms').doc('hq').update({flash:true}); setTimeout(()=>db.collection('rooms').doc('hq').update({flash:null}),500); } else { db.collection('rooms').doc('hq').update({chaos:t}); setTimeout(()=>db.collection('rooms').doc('hq').update({chaos:null}),2000); } }
-    function stopCam() { if(localStream){ localStream.getTracks().forEach(t=>t.stop()); document.getElementById("vid_ME")?.remove(); localStream=null; } }
-    function ghostMode() { myName="GHOST_" + Math.floor(Math.random()*99); alert("Ghost Mode Activated"); }
-    function toggleVisibility(v) { document.body.style.opacity = (v==='hidden'?'0.2':'1'); }
+    function triggerChaos(t) { db.collection('rooms').doc('hq').update({chaos:t}); setTimeout(()=>db.collection('rooms').doc('hq').update({chaos:null}), 1000); }
     function toggleInvert() { document.body.style.filter = (document.body.style.filter === 'invert(1)') ? 'invert(0)' : 'invert(1)'; }
-    function delAllChat() { if(confirm("Are you sure you want to wipe all messages?")) db.collection('rooms').doc('hq').collection('chat').get().then(s=>s.forEach(d=>d.ref.delete())); }
+    function delAllChat() { if(confirm("WIPE EVERYTHING?")) db.collection('rooms').doc('hq').collection('chat').get().then(s=>s.forEach(d=>d.ref.delete())); }
+    
+    // User Selector for Admin
+    async function openSelector(act) {
+      closeAllMenus();
+      const b = document.getElementById("listBody");
+      b.innerHTML = "Loading...";
+      const snap = await db.collection('status').get();
+      b.innerHTML = "";
+      snap.forEach(doc => {
+        if(doc.id === myName) return;
+        const d = document.createElement("div"); d.className = "selector-item"; d.innerText = doc.id;
+        d.onclick = () => { 
+            if(confirm(act + " " + doc.id + "?")) {
+                db.collection('rooms').doc('hq').collection('chat').add({name:'🛡️ SYSTEM', msg: doc.id + " " + act + "ED", time:Date.now()});
+            }
+            closeAllMenus();
+        };
+        b.append(d);
+      });
+      document.getElementById("userSelector").style.display = "block";
+    }
   </script>
 </body>
 </html>
